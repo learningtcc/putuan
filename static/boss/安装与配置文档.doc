@@ -1,0 +1,21 @@
+一、基本配置
+1.安装node http://nodejs.cn/  v4.4.4
+2.当前目录'boss'下运行命令
+  npm install cnpm -g (安装cnpm国内的库)
+  cnpm install(安装依赖包)
+  如果提示缺少某个包，npm install 包名 --save
+
+二、配置后台API请求路径
+  ./src/main.js   Vue.http.options.root = 'http://boss.sports.net' || 'http://localhost:9090' || 其他
+
+三、运行vue项目
+  npm run dev (默认8080端口，可到./config/index.js里修改)
+
+四、启动后台，后台项目要与vue项目端口不一样
+
+五、上线
+  npm run build 打包所有文件 只需将dist文件夹部署到服务器
+
+
+六、注意事项
+  表单请求的链接前面不要加 ‘/’ （不会对打包后的项目有影响）

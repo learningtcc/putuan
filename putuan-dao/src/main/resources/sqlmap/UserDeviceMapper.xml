@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.UserDeviceDao">
+
+    <insert id="add">
+        INSERT INTO user_device (user_id, device_id, device_using, create_time) VALUES (#{userId}, #{deviceId}, #{deviceUsing}, now())
+    </insert>
+
+    <select id="query" resultType="com.advanpro.putuan.model.UserDevice">
+        SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device WHERE user_id = #{userId} AND device_id = #{deviceId}
+    </select>
+
+    <select id="queryByDeviceId" resultType="com.advanpro.putuan.model.UserDevice">
+        SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device
+        WHERE device_id = #{deviceId}
+        ORDER BY update_time DESC
+        LIMIT 1
+    </select>
+
+
+    <select id="get" resultType="com.advanpro.putuan.model.UserDevice">
+        SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device WHERE user_id = #{userId} AND device_using = 1
+    </select>
+
+    <update id="update">
+        UPDATE user_device
+        <set>
+            <if test="deviceUsing != null">device_using = #{deviceUsing},</if>
+            update_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="unBindDevice">
+        UPDATE user_device SET device_using = 0, update_time = now()
+        WHERE user_id = #{userId} AND device_id = #{deviceId}
+    </update>
+
+    <update id="clear">
+        UPDATE user_device SET device_using = 0
+        WHERE device_id = #{deviceId}
+    </update>
+
+</mapper>

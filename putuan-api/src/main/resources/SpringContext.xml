@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+       <context:annotation-config />
+
+       <import resource="DataSource.xml" />
+
+       <!--扫描Service模块 注解  @Service-->
+       <context:component-scan base-package="com.advanpro.putuan.service">
+              <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+       </context:component-scan>
+
+       <!-- 在扫描其他bean之前先初始化上下文工具类 -->
+       <bean class="com.advanpro.putuan.utils.spring.ApplicationContextUtils" />
+
+       <bean id="tokenProcessor" class="com.advanpro.putuan.utils.token.TokenProcessor">
+              <property name="secretKey">
+                     <value type="java.lang.String">&lt;putuan&gt;</value>
+              </property>
+              <property name="algorithm">
+                     <value type="java.lang.String">SHA1</value>
+              </property>
+       </bean>
+
+       <bean id="redisCacheService" class="com.advanpro.putuan.utils.cache.impl.RedisCacheServiceImpl">
+              <constructor-arg index="0">
+                     <value>${cache.address}</value>
+              </constructor-arg>
+       </bean>
+
+       <bean id="mpProperty" class="com.advanpro.putuan.utils.wx.MpProperty"></bean>
+
+</beans>

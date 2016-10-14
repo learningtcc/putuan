@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.UserDao">
+
+    <sql id="userSelector">
+        SELECT id, open_id,account, password, nick_name, phone, sex, age, birthday, country, province, city, headimg_url, language, remark, historied, user_type, user_id, status, create_time, update_time FROM user
+    </sql>
+
+    <sql id="userUpdate">
+        UPDATE user
+        <set>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="headimgUrl != null">headimg_url = #{headimgUrl},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="historied != null">historied = #{historied},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            update_time = now()
+        </set>
+    </sql>
+
+    <sql id="whereCondition">
+        WHERE status = 1
+        <if test="nickName != null and nickName !=''">AND nick_name LIKE CONCAT('%',#{nickName},'%')</if>
+        <if test="province != null and province !=''">AND province LIKE CONCAT('%', #{province}, '%')</if>
+        <if test="city != null and city !=''">AND city LIKE CONCAT('%', #{city}, '%')</if>
+        <if test="phone != null and phone !=''">AND LOCATE(#{phone}, phone) > 0</if>
+        <if test="age != null and age !=''">AND LOCATE(#{age}, age) > 0</if>
+        <if test="sex != null and sex !=''">AND LOCATE(#{sex}, sex) > 0</if>
+        <if test="userType != null and userType !=''">AND user_type = #{userType}</if>
+        <if test="beginTime != null and endTime != null">AND  <![CDATA[  create_time  >=  #{beginTime} ]]> AND
+            <![CDATA[  create_time  <  #{endTime} ]]></if>
+    </sql>
+
+    <select id="get" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1 AND id = #{id}
+    </select>
+
+    <select id="getUserByOpenId" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE open_id = #{openId}
+    </select>
+
+    <select id="getByAccount" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1 AND account = #{account}
+    </select>
+
+    <select id="queryUserByCondition" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        <include refid="whereCondition"/>
+        ORDER BY create_time DESC
+        <if test="start >= 0 and limit >= 0">limit #{start}, #{limit}</if>
+    </select>
+
+    <select id="queryByAccount" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1 AND (account = #{phone} OR (phone = #{phone} AND user_type = 'APP'))
+    </select>
+
+    <select id="queryByPhone" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1 AND phone = #{phone}
+    </select>
+
+    <select id="queryUser" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1
+    </select>
+
+    <select id="queryWX" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        WHERE status = 1 AND user_type = 'WX'
+    </select>
+
+    <select id="queryByIds" resultType="com.advanpro.putuan.model.User">
+        <include refid="userSelector"/>
+        <if test="list != null">WHERE id in (<foreach item="userId" index="index" collection="list"
+                                                                     separator=",">#{userId}</foreach>)
+        </if>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT count(*) FROM user
+        <include refid="whereCondition"/>
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (open_id, account, nick_name, phone, password, sex, age, birthday, country, province, city, headimg_url, language, remark, historied, user_type, user_id, create_time)
+        VALUES (#{openId} ,#{account}, #{nickName}, #{phone}, #{password}, #{sex}, #{age}, #{birthday}, #{country}, #{province}, #{city}, #{headimgUrl},  #{language}, #{remark}, #{historied}, #{userType}, #{userId}, now())
+    </insert>
+
+    <update id="update">
+        <include refid="userUpdate"/>
+        WHERE open_id = #{openId}
+    </update>
+
+    <update id="updateById">
+        <include refid="userUpdate"/>
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE user SET status = 0, update_time = now() where open_id = #{openId}
+    </update>
+
+    <update id="bindPhone">
+        UPDATE user SET phone = #{phone}, update_time = now() where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE user SET password = #{newPassword}, update_time = now() where id = #{id}
+    </update>
+
+</mapper>

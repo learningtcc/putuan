@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>putuan</artifactId>
+        <groupId>com.advanpro.putuan</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>putuan-api</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <warExplodedDirectory>target/exploded/${project.artifactId}.war</warExplodedDirectory>
+    </properties>
+
+    <build>
+        <finalName>putuan-api</finalName>
+        <!-- 开发环境 -->
+        <filters>
+            <filter>src/main/filter/filter_api_dev.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <webappDirectory>${warExplodedDirectory}</webappDirectory>
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <includes>
+                                <include>*.xml</include>
+                            </includes>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!--预发部署通用打包 profile -->
+        <profile>
+            <id>daily</id>
+            <build>
+                <filters>
+                    <filter>src/main/filter/filter_api_daily.properties</filter>
+                </filters>
+            </build>
+        </profile>
+        <!--生产环境部署通用打包 profile -->
+        <profile>
+            <id>prod</id>
+            <build>
+                <filters>
+                    <filter>src/main/filter/filter_api_prod.properties</filter>
+                </filters>
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.advanpro.putuan</groupId>
+            <artifactId>putuan-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.advanpro.putuan</groupId>
+            <artifactId>putuan-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no">
+    <title>公众号二维码</title>
+</head>
+<body>
+    <div>
+        公众号二维码 ${url}
+        <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$!{ticket}">
+    </div>
+</body>
+</html>

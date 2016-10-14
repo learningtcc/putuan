@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.AccountDao">
+
+    <select id="get" resultType="com.advanpro.putuan.model.Account">
+        SELECT id, user_name, password, nick_name FROM account WHERE id = #{id}
+    </select>
+
+    <select id="list" resultType="com.advanpro.putuan.model.Account">
+        SELECT id, user_name, password, nick_name FROM account
+    </select>
+
+    <select id="getAccountByUserName" resultType="com.advanpro.putuan.model.Account">
+        SELECT id, user_name, password, nick_name FROM account WHERE user_name = #{userName}
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO account (user_name, password, nick_name, create_time)
+        VALUES (#{userName}, #{password}, #{nickName}, now())
+    </insert>
+
+    <update id="update">
+      UPDATE account
+        <set>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="password != null">sex = #{password},</if>
+            update_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete">
+        DELETE FROM account WHERE id = #{id}
+    </delete>
+
+</mapper>

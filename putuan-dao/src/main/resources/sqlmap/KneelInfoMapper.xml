@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.KneelInfoDao">
+
+    <sql id="kneelSelector">
+         SELECT id, user_id, kneel_count, device_id, start_time, create_time, update_time FROM kneel_info
+    </sql>
+
+    <sql id="whereCondition">
+        WHERE 1 = 1
+        <if test="beginTime != null and endTime != null">AND  <![CDATA[  start_time  >=  #{beginTime} ]]> AND
+            <![CDATA[  start_time  <  #{endTime} ]]></if>
+        <if test="userIdList != null">
+            AND user_id in (<foreach item="userId" index="index" collection="userIdList" separator=",">
+            #{userId}</foreach>)
+        </if>
+    </sql>
+
+    <select id="queryByUserIdAndTime" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        WHERE user_id = #{userId}
+        <if test="beginTime != null and endTime != null">AND  <![CDATA[  start_time  >=  #{beginTime} ]]> AND
+            <![CDATA[  start_time  <  #{endTime} ]]></if>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="queryByUserIdAndDeviceId" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        WHERE user_id = #{userId} AND device_id = #{deviceId}
+        <if test="beginTime != null and endTime != null">AND  <![CDATA[  start_time  >=  #{beginTime} ]]> AND
+            <![CDATA[  start_time  <  #{endTime} ]]></if>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="queryByTime" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        <if test="beginTime != null and endTime != null">WHERE  <![CDATA[  start_time  >=  #{beginTime} ]]> AND
+            <![CDATA[  start_time  <  #{endTime} ]]></if>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="queryByCondition" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        <include refid="whereCondition"/>
+        ORDER BY start_time DESC
+        <if test="start >= 0 and limit >= 0">limit #{start}, #{limit}</if>
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT count(*) FROM kneel_info
+        <include refid="whereCondition"/>
+    </select>
+
+    <select id="queryByProvince" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        <include refid="whereCondition"/>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="queryByLastUpdate" resultType="com.advanpro.putuan.model.KneelInfo">
+        <include refid="kneelSelector"/>
+        WHERE user_id = #{userId}
+        <if test="lastSyncTime != null">AND <![CDATA[  update_time  >  #{lastSyncTime} ]]> </if>
+        ORDER BY start_time DESC
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO kneel_info (user_id, kneel_count, device_id, start_time, update_time, create_time)
+        VALUES (#{userId}, #{kneelCount}, #{deviceId}, #{startTime}, now(), now())
+    </insert>
+
+    <update id="update">
+      UPDATE kneel_info SET kneel_count = #{kneelCount}, update_time = now()
+      WHERE id = #{id}
+    </update>
+
+    <insert id="addBase" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_kneel_info (user_id, count, device_id, time, update_time, create_time)
+        VALUES (#{userId}, #{count}, #{deviceId}, #{time}, now(), now())
+    </insert>
+
+    <update id="updateBase">
+        UPDATE base_kneel_info SET count = #{count}, update_time = now()
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryBase" resultType="com.advanpro.putuan.model.BaseKneelInfo">
+        SELECT id, user_id, device_id, count, time, create_time, update_time FROM base_kneel_info
+        WHERE user_id = #{userId} AND device_id = #{deviceId}
+        <if test="beginTime != null and endTime != null">AND  <![CDATA[  time  >=  #{beginTime} ]]> AND
+            <![CDATA[  time  <  #{endTime} ]]></if>
+        ORDER BY time DESC
+    </select>
+</mapper>

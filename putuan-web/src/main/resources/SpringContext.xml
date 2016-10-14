@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+       <context:annotation-config />
+
+       <import resource="DataSource.xml" />
+
+       <!-- 读取集中配置文件，在@Service@Controller等声明的bean中使用@Value("${name})方式注入 -->
+       <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+              <property name="locations">
+                     <array>
+                            <value>classpath:mp.properties</value>
+                     </array>
+              </property>
+       </bean>
+
+       <!--扫描Service模块 注解  @Service-->
+       <context:component-scan base-package="com.advanpro.putuan.service">
+              <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+       </context:component-scan>
+
+       <!-- 在扫描其他bean之前先初始化上下文工具类 -->
+       <bean class="com.advanpro.putuan.utils.spring.ApplicationContextUtils" />
+
+       <bean id="urlBrokerFactory" class="com.advanpro.putuan.web.common.URLBrokerFactory" init-method="init">
+              <property name="urlConfigName" value="/url.xml" />
+       </bean>
+
+       <bean id="redisCacheService" class="com.advanpro.putuan.utils.cache.impl.RedisCacheServiceImpl">
+              <constructor-arg index="0">
+                     <value>${cache.address}</value>
+              </constructor-arg>
+       </bean>
+
+       <!--事件处理类-->
+       <bean id="messageProcessHelper" class="com.advanpro.putuan.web.wechat.helper.MessageProcessHelper"></bean>
+       <bean id="clickMessageProcessHelper" class="com.advanpro.putuan.web.wechat.helper.ClickMessageProcessHelper"></bean>
+
+       <bean id="mpProperty" class="com.advanpro.putuan.utils.wx.MpProperty">
+              <property name="appId" value="${appId}" />
+              <property name="appSecret" value="${appSecret}" />
+              <property name="token" value="${token}" />
+              <property name="originId" value="${originId}" />
+              <property name="mpTokenUrl" value="${MP.TOKEN.URL}" />
+              <property name="mpShorturlUrl" value="${MP.SHORTURL.URL}" />
+              <property name="mpTicketGetTicketUrl" value="${MP.TICKET.GETTICKET.URL}" />
+              <property name="mpMessageCustomSendUrl" value="${MP.MESSAGE.CUSTOM.SEND.URL}" />
+              <property name="mpMenuCreateUrl" value="${MP.MENU.CREATE.URL}" />
+              <property name="mpQrcodeCreateUrl" value="${MP.QRCODE.CREATE.URL}" />
+              <property name="mpUserInfoUrl" value="${MP.USER.INFO.URL}" />
+              <property name="mpOauth2AuthorizeUrl" value="${MP.OAUTH2.AUTHORIZE.URL}" />
+              <property name="mpOauth2AccessTokenUrl" value="${MP.OAUTH2.ACCESSTOKEN.URL}" />
+              <property name="mpSnsUserinfoUrl" value="${MP.SNS.USERINFO.URL}" />
+
+              <property name="mpDeviceGetqrcodeUrl" value="${MP.DEVICE.GETQRCODE.URL}" />
+              <property name="mpDeviceAuthorizeDeviceUrl" value="${MP.DEVICE.AUTHORIZE_DEVICE.URL}" />
+              <property name="mpDeviceCreateQrcodeUrl" value="${MP.DEVICE.CREATE_QRCODE.URL}" />
+              <property name="mpDeviceGetStatUrl" value="${MP.DEVICE.GETSTAT.URL}" />
+              <property name="mpDeviceCompelBindUrl" value="${MP.DEVICE.COMPELBIND.URL}" />
+              <property name="mpDeviceCompelUnBindUrl" value="${MP.DEVICE.COMPELUNBIND.URL}" />
+              <property name="mpDeviceTransMsgUrl" value="${MP.DEVICE.TRANSMSG.URL}" />
+
+              <property name="mpUploadImageUrl" value="${MP.UPLOAD.IMAGE.URL}" />
+              <property name="mpUploadMediaUrl" value="${MP.UPLOAD.MEDIA.URL}" />
+
+              <property name="webAccessTokenUrl" value="${WEB.ACCESS.TOKEN.URL}"/>
+              <property name="webRefreshTokenUrl" value="${WEB.REFRESH.TOKEN.URL}"/>
+       </bean>
+
+       <context:component-scan base-package="com.advanpro.putuan.task" />
+       <task:annotation-driven scheduler="CloudWechatScheduler" />
+       <task:scheduler id="CloudWechatScheduler" pool-size="10" />
+
+</beans>

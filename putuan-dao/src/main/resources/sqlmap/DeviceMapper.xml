@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.DeviceDao">
+
+    <select id="queryByCondition" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        <include refid="queryCondition"></include>
+        ORDER BY create_time DESC
+        limit #{start}, #{limit}
+    </select>
+
+    <select id="queryById" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        WHERE id=#{id} limit 1
+    </select>
+
+    <select id="queryByMac" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        WHERE mac=#{mac} limit 1
+    </select>
+
+    <select id="queryByDeviceId" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        WHERE device_id=#{deviceId} limit 1
+    </select>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) FROM device
+        <include refid="queryCondition"></include>
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO device (device_id, type_code,  device_number, qr_ticket, mac, connect_protocol, auth_key, close_strategy, conn_strategy, crypt_method, auth_ver, manu_mac_pos, ser_mac_pos, ble_simple_protocol, product_id, create_time)
+        VALUES (#{deviceId}, #{typeCode}, #{deviceNumber}, #{qrTicket}, #{mac}, #{connectProtocol}, #{authKey}, #{closeStrategy}, #{connStrategy}, #{cryptMethod}, #{authVer}, #{manuMacPos}, #{serMacPos}, #{bleSimpleProtocol}, #{productId}, now())
+    </insert>
+
+    <update id="update">
+        UPDATE device
+        <set>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="qrTicket != null">qr_ticket = #{qrTicket},</if>
+            <if test="mac != null">mac = #{mac},</if>
+            <if test="connectProtocol != null">connect_protocol = #{connectProtocol},</if>
+            <if test="authKey != null">auth_key = #{authKey},</if>
+            <if test="closeStrategy != null">close_strategy = #{closeStrategy},</if>
+            <if test="connStrategy != null">conn_strategy = #{connStrategy},</if>
+            <if test="cryptMethod != null">crypt_method = #{cryptMethod},</if>
+            <if test="authVer != null">auth_ver = #{authVer},</if>
+            <if test="manuMacPos != null">manu_mac_pos = #{manuMacPos},</if>
+            <if test="serMacPos != null">ser_mac_pos = #{serMacPos},</if>
+            <if test="bleSimpleProtocol != null">ble_simple_protocol = #{bleSimpleProtocol},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            update_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <sql id="deviceSelector">
+        SELECT id, device_id, type_code,  device_number, qr_ticket, mac, connect_protocol, auth_key, close_strategy,
+        conn_strategy, crypt_method, auth_ver, manu_mac_pos, ser_mac_pos, ble_simple_protocol, product_id, create_time, update_time FROM device
+    </sql>
+
+    <sql id="queryCondition">
+        <where>
+            1=1
+            <if test="deviceIdOrMac != null">
+                AND (LOCATE('${deviceIdOrMac}',device_id)>0 OR LOCATE('${deviceIdOrMac}',mac)>0)
+            </if>
+        </where>
+    </sql>
+
+</mapper>

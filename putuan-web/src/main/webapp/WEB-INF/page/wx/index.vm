@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>蒲团微信</title>
+    <script>
+        OPENID = '${openId}';
+    </script>
+    <link href="../res/css/app.223fb2373b967e468ad6aa7f45939b2a.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app"></div>
+<script type="text/javascript" src="../res/js/manifest.2fd5db3c9c44674d6c64.js"></script>
+<script type="text/javascript" src="../res/js/vendor.1a8c8f4e92c2bae82235.js"></script>
+<script type="text/javascript" src="../res/js/app.0ffb174c5bcbb139a429.js"></script>
+</body>
+
+</html>

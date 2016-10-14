@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no">
+    <title>排行榜</title>
+    <link href=../res/css/app.css rel=stylesheet>
+</head>
+<body>
+    <div>
+        欢迎ＸＸ公众号管理后台
+    </div>
+</body>
+</html>

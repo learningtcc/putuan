@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info"> <!-- 用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出 -->
+    <appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p [%c] - %m%n" />
+        </Console>
+
+        <RollingFile name="all-log" fileName="${loggingRoot}/putuan-all.log" filePattern="${loggingRoot}/putuan-all_%d{yyyy-MM-dd}_%i.log.gz">
+            <!--<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />-->
+            <PatternLayout pattern="%d %p [%c] - %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="debug-log" fileName="${loggingRoot}/putuan-debug.log" filePattern="${loggingRoot}/putuan-debug_%d{yyyy-MM-dd}_%i.log.gz">
+            <!--过滤掉info以上的日志-->
+            <Filters>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+            <PatternLayout pattern="%d %p [%c] - %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="error-log" fileName="${loggingRoot}/putuan-error.log" filePattern="${loggingRoot}/putuan-error_%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d %p [%c] - %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="sql-log" fileName="${loggingRoot}/putuan-sql-debug.log" filePattern="${loggingRoot}/putuan-sql-debug.log-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d %p [%c] - %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="500 MB" />
+            </Policies>
+        </RollingFile>
+
+    </appenders>
+    <!--Root Logger的级别是error，即：所有error及以上级别的日志才会记录。(注：日志级别顺序为 TRACE < DEBUG < INFO < WARN < ERROR < FATAL )，所以最终只有2日志会输出(error,fatal)-->
+    <loggers>
+        <root level="DEBUG">
+            <AppenderRef ref="CONSOLE" />
+            <!--<AppenderRef ref="all-log" />-->
+        </root>
+        <logger name="org.springframework" level="ERROR" additivity="true" />
+        <logger name="com.mchange" level="ERROR" additivity="true" />
+
+        <logger name="com.advanpro" level="DEBUG" additivity="false">
+            <AppenderRef ref="sql-log" />
+        </logger>
+
+        <logger name="com.advanpro" level="DEBUG"  additivity="true">
+            <AppenderRef ref="error-log" />
+            <AppenderRef ref="debug-log" />
+        </logger>
+    </loggers>
+</configuration>
