@@ -21,7 +21,6 @@
             <if test="language != null">language = #{language},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="historied != null">historied = #{historied},</if>
-            <if test="status != null">status = #{status},</if>
             <if test="userId != null">user_id = #{userId},</if>
             update_time = now()
         </set>

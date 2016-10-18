@@ -158,6 +158,7 @@ public class UserVo {
             user.setHistoried(1);
         }
         user.setUserType("APP");
+        user.setStatus(1);
         return user;
     }
 
