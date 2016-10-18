@@ -121,7 +121,7 @@ public enum StatusCode {
     },
     WX_BIND(3114) {
         public String getMessage() {
-            return "已绑定微信账号!";
+            return "该账号已绑定微信或该微信已被其它账号绑定了!";
         }
     },
     PHONE_ALREADY_BIND(3115) {

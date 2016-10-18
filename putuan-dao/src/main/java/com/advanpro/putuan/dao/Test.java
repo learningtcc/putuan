@@ -79,7 +79,7 @@ public class Test {
         tokenProcessor.setSecretKey("<putuan>");
         File folder = new File("/11113" + "/fdsfdf");
         folder.mkdirs();
-        System.out.println(tokenProcessor.getTokenV("13750024022:ca97fa3d1f2d403ca0dcb8e067c6693f"));
+        System.out.println(tokenProcessor.getTokenV("15989781572:e81237e6b792491da67f8a7b73b933d7"));
 
 
 

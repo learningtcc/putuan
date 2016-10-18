@@ -332,11 +332,16 @@ public class UserController extends BaseController {
                 return new JsonResult(StatusCode.NOT_ALLOW);
 
             User wxUser = userService.getUserByOpenId(openId);
+            if (wxUser != null && wxUser.getUserId() > 0) {
+                return new JsonResult(StatusCode.WX_BIND);
+            }
             if (wxUser == null || wxUser.getId() == 0) {
                 wxUser = new User();
                 wxUser.setNickName(nickName);
                 wxUser.setOpenId(openId);
                 wxUser.setHeadimgUrl(headimgUrl);
+                wxUser.setStatus(1);
+                wxUser.setUserType("WX");
             }
             userService.bindUser(wxUser, user);
             return new JsonResult(StatusCode.OK);
@@ -390,7 +395,6 @@ public class UserController extends BaseController {
             if (user == null || user.getId() != userId)
                 return new JsonResult(StatusCode.NOT_ALLOW);
 
-            userService.getUserByOpenId(openId);
             int wxUserId = user.getUserId();
             User wxUser = userService.get(wxUserId);
             if (wxUser != null) {

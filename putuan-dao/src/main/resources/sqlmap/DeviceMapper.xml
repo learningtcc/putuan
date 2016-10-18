@@ -19,6 +19,11 @@
         WHERE mac=#{mac} limit 1
     </select>
 
+    <select id="queryByNo" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        WHERE device_number=#{deviceNumber} limit 1
+    </select>
+
     <select id="queryByDeviceId" resultType="com.advanpro.putuan.model.Device">
         <include refid="deviceSelector"></include>
         WHERE device_id=#{deviceId} limit 1

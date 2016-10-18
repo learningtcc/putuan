@@ -25,4 +25,6 @@ public interface DeviceDao {
     Device queryById(int id);
 
     Device queryByDeviceId(String deviceId);
+
+    Object queryByNo(String deviceNumber);
 }

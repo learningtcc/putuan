@@ -16,6 +16,7 @@
         <mapper resource="sqlmap/UserDeviceMapper.xml"></mapper>
         <mapper resource="sqlmap/DeviceTypeMapper.xml"></mapper>
         <mapper resource="sqlmap/KneelInfoMapper.xml"></mapper>
+        <mapper resource="sqlmap/VersionMapper.xml"></mapper>
     </mappers>
 
 </configuration>

@@ -47,6 +47,12 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceDao.queryByMac(mac);
     }
 
+
+    @Override
+    public Object queryByNo(String deviceNumber) {
+        return deviceDao.queryByNo(deviceNumber);
+    }
+
     @Override
     public Device queryByDeviceId(String deviceId) {
         return deviceDao.queryByDeviceId(deviceId);
@@ -98,17 +104,20 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public String add(Device device) {
         String accessToken = accessTokenService.getAccessToken();
-        Map<String, String> params = Maps.newHashMap();
-        params.put("access_token", accessToken);
-        params.put("product_id", String.valueOf(device.getProductId()));
-        Map<String, String> result = MpApi.get(mpProperty.getMpDeviceGetqrcodeUrl(), params, Map.class);
-        String deviceId = result.get("deviceid");
-        if (StringUtils.isEmpty(deviceId)) {
-            throw new RuntimeException("system error");
+        String productId = device.getProductId();
+        if (StringUtils.isNotEmpty(productId)) {
+            Map<String, String> params = Maps.newHashMap();
+            params.put("access_token", accessToken);
+            params.put("product_id", productId);
+            Map<String, String> result = MpApi.get(mpProperty.getMpDeviceGetqrcodeUrl(), params, Map.class);
+            String deviceId = result.get("deviceid");
+            if (StringUtils.isEmpty(deviceId)) {
+                throw new RuntimeException("system error");
+            }
+            device.setDeviceId(deviceId);
+            device.setQrTicket(result.get("qrticket"));
+            updateDeviceInfo(device);
         }
-        device.setDeviceId(deviceId);
-        device.setQrTicket(result.get("qrticket"));
-        updateDeviceInfo(device);
         deviceDao.add(device);
         return device.getQrTicket();
     }

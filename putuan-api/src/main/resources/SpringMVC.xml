@@ -39,6 +39,7 @@
             <mvc:exclude-mapping path="/checkAccount"/>
             <mvc:exclude-mapping path="/user/exist"/>
             <mvc:exclude-mapping path="/user/forgetPassword"/>
+            <mvc:exclude-mapping path="/version/**"/>
             <bean class="com.advanpro.putuan.api.interceptor.UserTokenInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

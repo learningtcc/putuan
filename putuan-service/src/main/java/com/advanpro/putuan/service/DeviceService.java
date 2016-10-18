@@ -27,4 +27,6 @@ public interface DeviceService {
     Page<Device> queryByCondition(String deviceIdOrMac, int pageNo, int pageSize);
 
     void compelUnBind(String openId, String deviceId);
+
+    Object queryByNo(String deviceNumber);
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.advanpro.putuan.dao.VersionDao">
+
+    <sql id="versionSelector">
+        SELECT id, version, company, product, description, url, create_time, update_time FROM version
+    </sql>
+
+    <select id="get" resultType="com.advanpro.putuan.model.Version">
+        <include refid="versionSelector"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getNewest" resultType="com.advanpro.putuan.model.Version">
+        <include refid="versionSelector"/>
+        WHERE type = #{type} ORDER BY update_time DESC LIMIT 1
+    </select>
+
+    <select id="query" resultType="com.advanpro.putuan.model.Version">
+        <include refid="versionSelector"/>
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO version (version, company, product, description, url, create_time)
+        VALUES (#{version}, #{company}, #{product}, #{description}, #{url}, now())
+    </insert>
+
+    <update id="update">
+        UPDATE version
+        <set>
+            <if test="version != null">version = #{version},</if>
+            <if test="company != null">company = #{company},</if>
+            <if test="product != null">product = #{product},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="url != null">url = #{url},</if>
+            update_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM version WHERE id = #{id}
+    </delete>
+
+</mapper>
