@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50546
 File Encoding         : 65001
 
-Date: 2016-10-14 13:52:07
+Date: 2016-10-18 15:58:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -50,27 +50,27 @@ CREATE TABLE `base_kneel_info` (
 DROP TABLE IF EXISTS `device`;
 CREATE TABLE `device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` varchar(11) COLLATE utf8mb4_bin NOT NULL,
+  `product_id` varchar(11) COLLATE utf8mb4_bin DEFAULT NULL,
   `type_code` varchar(20) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '设备类型',
-  `device_id` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `device_id` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
   `device_number` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '设备编号',
-  `qr_ticket` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `qr_ticket` varchar(200) COLLATE utf8mb4_bin DEFAULT '',
   `mac` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `connect_protocol` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `auth_key` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `close_strategy` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `conn_strategy` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `crypt_method` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `auth_ver` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `manu_mac_pos` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `ser_mac_pos` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `ble_simple_protocol` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `connect_protocol` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `auth_key` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
+  `close_strategy` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `conn_strategy` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `crypt_method` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `auth_ver` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `manu_mac_pos` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `ser_mac_pos` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
+  `ble_simple_protocol` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
   `update_time` datetime DEFAULT '1970-01-01 00:00:00',
   `create_time` datetime DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `un_deviceid` (`device_id`) USING BTREE,
-  UNIQUE KEY `un_mac` (`mac`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------设备表';
+  UNIQUE KEY `un_mac` (`mac`) USING BTREE,
+  UNIQUE KEY `un_deviceid` (`device_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------设备表';
 
 -- ----------------------------
 -- Table structure for device_type
@@ -99,7 +99,7 @@ CREATE TABLE `kneel_info` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------跪拜表';
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------跪拜表';
 
 -- ----------------------------
 -- Table structure for product
@@ -148,7 +148,7 @@ CREATE TABLE `user` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------用户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------用户信息表';
 
 -- ----------------------------
 -- Table structure for user_device
@@ -162,4 +162,21 @@ CREATE TABLE `user_device` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- ----------------------------
+-- Table structure for version
+-- ----------------------------
+DROP TABLE IF EXISTS `version`;
+CREATE TABLE `version` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `version` varchar(20) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `company` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
+  `product` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `description` varchar(200) COLLATE utf8mb4_bin DEFAULT '',
+  `type` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `url` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'yyyy-MM-dd hh:mm:ss',
+  `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'yyyy-MM-dd hh:mm:ss',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='------终端版本';
