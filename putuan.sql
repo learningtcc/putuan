@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50546
 File Encoding         : 65001
 
-Date: 2016-10-18 15:58:47
+Date: 2016-11-15 10:50:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `account` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------管理员账号表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------管理员账号表';
 
 -- ----------------------------
 -- Table structure for base_kneel_info
@@ -70,7 +70,7 @@ CREATE TABLE `device` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `un_mac` (`mac`) USING BTREE,
   UNIQUE KEY `un_deviceid` (`device_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------设备表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------设备表';
 
 -- ----------------------------
 -- Table structure for device_type
@@ -99,7 +99,7 @@ CREATE TABLE `kneel_info` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------跪拜表';
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------跪拜表';
 
 -- ----------------------------
 -- Table structure for product
@@ -128,7 +128,6 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `open_id` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
   `account` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
-  `wx_account` varchar(255) COLLATE utf8mb4_bin DEFAULT '',
   `password` varchar(32) COLLATE utf8mb4_bin DEFAULT '',
   `nick_name` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `phone` varchar(20) COLLATE utf8mb4_bin DEFAULT '',
@@ -148,7 +147,7 @@ CREATE TABLE `user` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------用户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='--------------用户信息表';
 
 -- ----------------------------
 -- Table structure for user_device
@@ -162,7 +161,7 @@ CREATE TABLE `user_device` (
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
 -- Table structure for version
@@ -176,7 +175,8 @@ CREATE TABLE `version` (
   `description` varchar(200) COLLATE utf8mb4_bin DEFAULT '',
   `type` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `url` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `md5` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'yyyy-MM-dd hh:mm:ss',
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'yyyy-MM-dd hh:mm:ss',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='------终端版本';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='------终端版本';
