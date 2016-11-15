@@ -1,7 +1,6 @@
 package com.advanpro.putuan.service.impl;
 
 import com.advanpro.putuan.dao.DeviceDao;
-import com.advanpro.putuan.dao.ProductDao;
 import com.advanpro.putuan.model.Device;
 import com.advanpro.putuan.model.MpDeviceInfo;
 import com.advanpro.putuan.service.AccessTokenService;
@@ -10,14 +9,12 @@ import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.json.JsonUtils;
 import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,8 +46,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public Object queryByNo(String deviceNumber) {
+    public Device queryByNo(String deviceNumber) {
         return deviceDao.queryByNo(deviceNumber);
+    }
+
+    @Override
+    public Device queryByQRTicket(String ticket) {
+        return deviceDao.queryByQRTicket(ticket);
     }
 
     @Override
@@ -104,7 +106,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public String add(Device device) {
         String accessToken = accessTokenService.getAccessToken();
-        String productId = device.getProductId();
+        String productId = mpProperty.getProductId();
+        device.setProductId(productId);
         if (StringUtils.isNotEmpty(productId)) {
             Map<String, String> params = Maps.newHashMap();
             params.put("access_token", accessToken);

@@ -7,15 +7,14 @@ import com.advanpro.putuan.model.Version;
 import com.advanpro.putuan.service.VersionService;
 import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.json.JsonResult;
+import com.advanpro.putuan.utils.json.StatusCode;
 import com.advanpro.putuan.web.common.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,6 +40,31 @@ public class VersionController extends BaseController {
         } catch (Exception e) {
             logger.error("上传版本出错", e);
             return new JsonResult(false, "上传版本失败");
+        }
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/boss/version/update", method = RequestMethod.POST)
+    public JsonResult update(Version version) {
+        try {
+            versionService.update(version);
+            return new JsonResult(true);
+        } catch (Exception e) {
+            logger.error("更新版本信息出错", e);
+            return new JsonResult(false, "更新版本信息失败");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/boss/version/delete", method = RequestMethod.POST)
+    public JsonResult delete(int id) {
+        try {
+            versionService.delete(id);
+            return new JsonResult(true);
+        } catch (Exception e) {
+            logger.error("删除版本信息出错", e);
+            return new JsonResult(false, "删除版本信息失败");
         }
     }
 

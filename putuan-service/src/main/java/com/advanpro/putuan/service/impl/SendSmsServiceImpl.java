@@ -19,9 +19,9 @@ public class SendSmsServiceImpl implements SendSmsService {
     @Override
     public boolean sendVerifyCode(String mobile, String verifyCode) throws Exception {
         boolean ret = false;
-        String requestText = "apikey=7773cc9d557660469953f7f7dda91eaf";
+        String requestText = "apikey=6696ba24a2675abef6d15305ad80237d";
         requestText += "&mobile=" + URLEncoder.encode(mobile, "UTF-8");
-        requestText += "&text=" + URLEncoder.encode("【安润普】您的验证码是" + verifyCode + "，10分钟有效，请注意保密，若非本人操作请忽略。", "UTF-8");
+        requestText += "&text=" + URLEncoder.encode("【大白牛】您的验证码是" + verifyCode, "UTF-8");
 
         URL url = new URL("https://sms.yunpian.com/v1/sms/send.json");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

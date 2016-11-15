@@ -115,7 +115,7 @@ public class UserController extends BaseController {
             if (CheckUtils.checkMobile(phone)) {
                 try {
                     // 发短信
-                    //sendSmsService.sendVerifyCode(phone, randomCode);
+                    sendSmsService.sendVerifyCode(phone, randomCode);
                 } catch (Exception e) {
                     return new JsonResult(false, "获取验证码出错");
                 }

@@ -46,8 +46,7 @@ public class ClickMessageProcessHelper {
         String appId = mpProperty.getAppId();
         String wxHome = urlBrokerFactory.getUrl("WeixinHome").toString();
         if ("V_KNEEL_RANKING".equals(eventKey)) {
-            //String redirectUrl = wxHome + "/ranking";
-            String redirectUrl = "http://putuan.tunnel.phpor.me/wx/ranking";
+            String redirectUrl = wxHome + "/ranking";
             NewsItem item = new NewsItem();
             User user = userService.getBindUserByOpenId(map.get("FromUserName"));
             Date beginTime = DateUtils.getDateStart(DateUtils.getCurrentDate());

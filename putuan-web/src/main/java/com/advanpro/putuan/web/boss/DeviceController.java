@@ -4,7 +4,6 @@ import com.advanpro.putuan.model.Device;
 import com.advanpro.putuan.model.Product;
 import com.advanpro.putuan.service.AccessTokenService;
 import com.advanpro.putuan.service.DeviceService;
-import com.advanpro.putuan.service.ProductService;
 import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.json.JsonResult;
 import com.advanpro.putuan.web.common.BaseController;
@@ -34,30 +33,7 @@ public class DeviceController extends BaseController {
     private DeviceService deviceService;
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private AccessTokenService accessTokenService;
-
-    @RequestMapping("/boss/device")
-    public String index(HttpServletRequest request, ModelMap model) {
-        if (StringUtils.isEmpty( accessTokenService.getAccessToken())) {
-            accessTokenService.updateAccessToken();
-        }
-
-        String keyword = request.getParameter("keyword");
-        int pageNo = NumberUtils.toInt(request.getParameter("pageNo"), 1);
-        int pageSize = NumberUtils.toInt(request.getParameter("pageSize"), 16);
-        Page<Device> pageDeviceInfo = deviceService.queryByCondition(keyword, pageNo, pageSize);
-        List<Product> productList = productService.list();
-        if (StringUtils.isNotBlank(keyword)) {
-            model.addAttribute("keyword", keyword);
-        }
-        model.addAttribute("products", productList);
-        model.addAttribute("pageDevice", pageDeviceInfo);
-
-        return "/boss/device/index";
-    }
 
     @ResponseBody
     @RequestMapping("/boss/device/list")

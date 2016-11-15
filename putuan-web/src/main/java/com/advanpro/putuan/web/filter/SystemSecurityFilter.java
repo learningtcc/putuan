@@ -37,16 +37,17 @@ public class SystemSecurityFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String uri = request.getRequestURI();
+
         if (letGo(uri)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         } else {
             //处理管理后台登陆
             Account account = (Account) request.getSession().getAttribute("LoginUser");
-/*            if (account == null) {
+            if (account == null) {
                 response.sendRedirect("/login");
                 return;
-            }*/
+            }
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

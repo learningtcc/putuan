@@ -26,7 +26,12 @@
 
     <select id="queryByDeviceId" resultType="com.advanpro.putuan.model.Device">
         <include refid="deviceSelector"></include>
-        WHERE device_id=#{deviceId} limit 1
+        WHERE device_id=#{deviceId} OR device_number=#{deviceId} limit 1
+    </select>
+
+    <select id="queryByQRTicket" resultType="com.advanpro.putuan.model.Device">
+        <include refid="deviceSelector"></include>
+        WHERE qr_ticket=#{qrTicket} limit 1
     </select>
 
 
@@ -70,7 +75,7 @@
         <where>
             1=1
             <if test="deviceIdOrMac != null">
-                AND (LOCATE('${deviceIdOrMac}',device_id)>0 OR LOCATE('${deviceIdOrMac}',mac)>0)
+                AND (LOCATE('${deviceIdOrMac}',device_id)>0 OR LOCATE('${deviceIdOrMac}',device_number)>0 OR LOCATE('${deviceIdOrMac}',mac)>0)
             </if>
         </where>
     </sql>

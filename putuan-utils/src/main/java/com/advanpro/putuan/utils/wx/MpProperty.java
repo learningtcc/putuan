@@ -12,6 +12,7 @@ public class MpProperty {
     private String appSecret;
     private String token;
     private String originId;
+    private String productId;
 
     private String uploadPath;
     private String domainUpload;
@@ -227,6 +228,14 @@ public class MpProperty {
 
     public void setOriginId(String originId) {
         this.originId = originId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getMpUploadImageUrl() {

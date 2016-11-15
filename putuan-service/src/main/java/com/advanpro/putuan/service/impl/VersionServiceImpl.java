@@ -3,14 +3,16 @@ package com.advanpro.putuan.service.impl;
 import com.advanpro.putuan.dao.VersionDao;
 import com.advanpro.putuan.model.Version;
 import com.advanpro.putuan.service.VersionService;
+import com.advanpro.putuan.utils.common.EncryptUtils;
+import com.advanpro.putuan.utils.upload.UploadFile;
 import com.advanpro.putuan.utils.wx.MpProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -41,23 +43,10 @@ public class VersionServiceImpl implements VersionService {
         // 上传
         String relativePath = uploadPath + "/" + version.getType() + "/" + version.getVersion();
         String url = domainUpload + "/" + version.getType() + "/" + version.getVersion() + "/" + fileName;
-        File file = new File(relativePath + "/" + URLEncoder.encode(fileName, "UTF-8"));
-        if (!file.getParentFile().exists()) {
-            File folder = new File(relativePath);
-            folder.mkdirs();
-        }
-        multipartFile.transferTo(file);
-        Version newestVersion = getNewest(version.getType());
-        if (newestVersion != null) {
-            newestVersion.setCompany(version.getCompany());
-            newestVersion.setDescription(version.getDescription());
-            newestVersion.setProduct(version.getProduct());
-            newestVersion.setVersion(version.getVersion());
-            newestVersion.setUrl(url);
-            versionDao.update(newestVersion);
-        } else {
-            versionDao.add(version);
-        }
+        File file = UploadFile.transferTo(multipartFile, relativePath, URLEncoder.encode(fileName, "UTF-8"));
+        version.setUrl(url);
+        version.setMd5(EncryptUtils.getFileMD5String(file));
+        versionDao.add(version);
     }
 
     @Override

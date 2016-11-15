@@ -48,8 +48,10 @@
               <property name="appId" value="${appId}" />
               <property name="appSecret" value="${appSecret}" />
               <property name="token" value="${token}" />
-              <property name="uploadPath" value="${upload.path}" />
-              <property name="domainUpload" value="${domain.upload}" />
+              <property name="originId" value="${originId}" />
+              <property name="productId" value="${productId}" />
+              <property name="uploadPath" value="${uploadPath}" />
+              <property name="domainUpload" value="${domainUpload}" />
               <property name="mpTokenUrl" value="${MP.TOKEN.URL}" />
               <property name="mpShorturlUrl" value="${MP.SHORTURL.URL}" />
               <property name="mpTicketGetTicketUrl" value="${MP.TICKET.GETTICKET.URL}" />

@@ -10,6 +10,8 @@ import com.advanpro.putuan.model.UserDevice;
 import com.advanpro.putuan.service.UserService;
 import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.date.DateUtils;
+import com.advanpro.putuan.utils.upload.UploadFile;
+import com.advanpro.putuan.utils.wx.MpProperty;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private KneelInfoDao kneelInfoDao;
+
+    @Autowired
+    private MpProperty mpProperty;
 
     @Override
     public User get(int id) {
@@ -188,8 +191,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void uploadFace(int id, MultipartFile multipartFile) throws IOException {
-        final String uploadPath = "/data/upload/putuan";
-        final String uploadUrl = "http://api.putuan.net/putuan";
+        final String uploadPath = mpProperty.getUploadPath();
+        final String uploadUrl = mpProperty.getDomainUpload();
         String fileName = multipartFile.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         fileName = UUID.randomUUID().toString().replaceAll("-", "") + suffix;  // 用UUID重命名头像
@@ -197,13 +200,7 @@ public class UserServiceImpl implements UserService {
         // 上传
         String relativePath = uploadPath + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date());
         String url = uploadUrl + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "/" + fileName;
-        File file = new File(relativePath + "/" + URLEncoder.encode(fileName, "UTF-8"));
-        if (!file.getParentFile().exists()) {
-            File folder = new File(relativePath);
-            folder.mkdirs();
-        }
-        //保存到一个目标文件中。
-        multipartFile.transferTo(file);
+        UploadFile.transferTo(multipartFile, relativePath, URLEncoder.encode(fileName, "UTF-8"));
         User user = userDao.get(id);
         user.setHeadimgUrl(url);
         userDao.updateById(user);

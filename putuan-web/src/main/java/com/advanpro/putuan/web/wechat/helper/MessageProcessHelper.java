@@ -137,9 +137,10 @@ public class MessageProcessHelper {
         String openId = map.get("OpenID");
         String deviceId = map.get("DeviceID");
         byte[] content = Base64.decodeBase64(map.get("content"));
-        int kneelCount = 0;
         if (content.length == 6) {
-            kneelCount = ((content[4] & 0x000000FF) << 8) + (content[5] & 0x000000FF);
+            int kneelCount = ((content[4] & 0x000000FF) << 8) + (content[5] & 0x000000FF);
+            User user = userService.getBindUserByOpenId(openId);
+            kneelInfoService.addOrUpdateWX(user.getId(), deviceId, kneelCount);
         }
         if (content.length == 4) {
             if (content[0] == 0x02 && content[1] == 0x04) {
@@ -148,8 +149,7 @@ public class MessageProcessHelper {
                 }
             }
         }
-        User user = userService.getBindUserByOpenId(openId);
-        kneelInfoService.addOrUpdateWX(user.getId(), deviceId, kneelCount);
+
         return "";
     }
 }

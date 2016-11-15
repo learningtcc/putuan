@@ -28,5 +28,7 @@ public interface DeviceService {
 
     void compelUnBind(String openId, String deviceId);
 
-    Object queryByNo(String deviceNumber);
+    Device queryByNo(String deviceNumber);
+
+    Device queryByQRTicket(String ticket);
 }

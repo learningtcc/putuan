@@ -12,7 +12,7 @@ import com.advanpro.putuan.utils.json.JsonResult;
 import com.advanpro.putuan.utils.json.JsonUtils;
 import com.advanpro.putuan.utils.json.StatusCode;
 import com.advanpro.putuan.utils.token.TokenProcessor;
-import com.advanpro.putuan.utils.upload.UploadPicture;
+import com.advanpro.putuan.utils.upload.UploadFile;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +168,7 @@ public class UserController extends BaseController {
             if (multipartFile == null)
                 return new JsonResult(StatusCode.UPLOAD_FILE_NOT_NULL);
 
-            if (!UploadPicture.isPicture(multipartFile.getOriginalFilename()))
+            if (!UploadFile.isPicture(multipartFile.getOriginalFilename()))
                 return new JsonResult(StatusCode.USER_FACE_NOT_PICTRUE);
             userService.uploadFace(userId, multipartFile);
             return new JsonResult(StatusCode.OK);
@@ -389,7 +389,7 @@ public class UserController extends BaseController {
             }
 
             int userId = Integer.valueOf(JsonUtils.toMap(param).get("userId").toString());
-            String openId = (String) JsonUtils.toMap(param).get("openId");
+            //String openId = (String) JsonUtils.toMap(param).get("openId");
 
             User user = getCurrentUser(request);
             if (user == null || user.getId() != userId)
@@ -398,7 +398,7 @@ public class UserController extends BaseController {
             int wxUserId = user.getUserId();
             User wxUser = userService.get(wxUserId);
             if (wxUser != null) {
-                return new JsonResult(StatusCode.WX_BIND).addData("nickName", wxUser.getNickName());
+                return new JsonResult(StatusCode.OK).addData("nickName", wxUser.getNickName());
             }
 
             return new JsonResult(StatusCode.OK);
@@ -424,7 +424,7 @@ public class UserController extends BaseController {
             if (CheckUtils.checkMobile(account)) {
                 try {
                     // 发短信
-                    //sendSmsService.sendVerifyCode(account, randomCode);
+                    sendSmsService.sendVerifyCode(account, randomCode);
                 } catch (Exception e) {
                     return new JsonResult(StatusCode.NOT_ALLOW).setMsg(e.getMessage());
                 }

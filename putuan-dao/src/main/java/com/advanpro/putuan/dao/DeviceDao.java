@@ -26,5 +26,7 @@ public interface DeviceDao {
 
     Device queryByDeviceId(String deviceId);
 
-    Object queryByNo(String deviceNumber);
+    Device queryByNo(String deviceNumber);
+
+    Device queryByQRTicket(String qrTicket);
 }

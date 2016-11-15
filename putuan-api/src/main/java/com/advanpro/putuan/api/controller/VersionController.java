@@ -26,14 +26,16 @@ public class VersionController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/version/newest")
-    public JsonResult getNewest( @RequestBody String param) {
+    public JsonResult getNewest(@RequestBody String param) {
         try {
             if (StringUtils.isEmpty(param)) {
                 return new JsonResult(StatusCode.INVALID_PARAMETER);
             }
             String type = (String) JsonUtils.toMap(param).get("type");
             Version version = versionService.getNewest(type);
-
+            if (version == null) {
+                return new JsonResult(StatusCode.OK);
+            }
             return new JsonResult(StatusCode.OK).addData("version", version.getVersion()).addData("url", version.getUrl());
         } catch (Exception e) {
             logger.error("查询最新版本信息出错:", e);

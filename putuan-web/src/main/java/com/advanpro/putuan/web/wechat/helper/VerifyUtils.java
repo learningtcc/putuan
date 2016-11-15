@@ -1,5 +1,7 @@
 package com.advanpro.putuan.web.wechat.helper;
 
+import com.advanpro.putuan.utils.common.EncryptUtils;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -21,40 +23,8 @@ public class VerifyUtils {
             builder.append(value);
         }
 
-        MessageDigest md = null;
-        String temp = null;
-        try {
-            md = MessageDigest.getInstance("SHA-1");
-            byte[] temByte = md.digest(builder.toString().getBytes());
-            temp = byteToString(temByte);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        builder = null;
-        return temp != null ? temp.equals(signature.toUpperCase()) : false;
-    }
+        String temp = EncryptUtils.makeSHA1(builder.toString());
 
-    private static String byteToString(byte[] array) {
-        String strDigest = "";
-        for (int i = 0; i < array.length; i++) {
-            strDigest += byteToHexStr(array[i]);
-        }
-        return strDigest;
-    }
-
-    /**
-     * 将字节转换为十六进制字符串
-     *
-     * @param mByte
-     * @return
-     */
-    private static String byteToHexStr(byte mByte) {
-        char[] Digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-        char[] tempArr = new char[2];
-        tempArr[0] = Digit[(mByte >>> 4) & 0X0F];
-        tempArr[1] = Digit[mByte & 0X0F];
-
-        String s = new String(tempArr);
-        return s;
+        return temp != null ? temp.equalsIgnoreCase(signature) : false;
     }
 }

@@ -46,7 +46,7 @@ public class NumberController extends BaseController {
      */
     @RequestMapping(value = "/device/register", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult register(String typeCode, String mac, String deviceNumber, String productId) {
+    public JsonResult register(String typeCode, String mac, String deviceNumber) {
         try {
             Device device = new Device();
             device.defaultDevice();
@@ -60,7 +60,6 @@ public class NumberController extends BaseController {
             device.setDeviceId(deviceNumber);
             device.setDeviceNumber(deviceNumber);
             device.setTypeCode(typeCode);
-            device.setProductId(productId);
             String qrTicket = deviceService.add(device);
             return new JsonResult(true).addData("qrTicket", qrTicket);
         } catch (Exception e) {
