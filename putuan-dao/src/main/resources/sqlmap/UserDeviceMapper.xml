@@ -26,7 +26,7 @@
         UPDATE user_device
         <set>
             <if test="deviceUsing != null">device_using = #{deviceUsing},</if>
-            update_time = now()
+            create_time = now(), update_time = now()
         </set>
         WHERE id = #{id}
     </update>

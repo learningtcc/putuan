@@ -22,6 +22,8 @@ public class DeviceVo {
 
     private String deviceType;
 
+    private long time;
+
     public String getDeviceId() {
         return deviceId;
     }
@@ -62,6 +64,14 @@ public class DeviceVo {
         this.typeCode = typeCode;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public void populateDevice(Device device) {
         this.setDeviceId(device.getDeviceId());
         this.setDeviceNumber(device.getDeviceNumber());
@@ -69,5 +79,6 @@ public class DeviceVo {
         this.setTypeCode(device.getTypeCode());
         String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
         this.setDeviceType(deviceType);
+        this.setTime(device.getCreateTime().getTime());
     }
 }

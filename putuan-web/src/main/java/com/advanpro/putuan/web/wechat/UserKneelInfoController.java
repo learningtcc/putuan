@@ -81,6 +81,9 @@ public class UserKneelInfoController extends BaseController {
             Date beginTime = DateUtils.getDateStart(DateUtils.getCurrentDate());
             Date endTime = DateUtils.getDateStart(DateUtils.addDays(DateUtils.getCurrentDate(), 1));
             List<UserKneelInfo> userKneelInfoList = kneelInfoService.getKneelInfoRanking(province, beginTime, endTime);
+            if (userKneelInfoList.size() > 7) {
+                userKneelInfoList = userKneelInfoList.subList(0, 7);
+            }
 
             return new JsonResult(true).addData("ranking", userKneelInfoList);
         } catch (Exception e) {

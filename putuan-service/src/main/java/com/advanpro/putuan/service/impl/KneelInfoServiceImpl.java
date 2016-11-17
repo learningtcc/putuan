@@ -158,6 +158,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
                 User user = userMap.get(kneelInfo.getUserId());
                 if (user != null) {
                     String key = user.getProvince();
+                    if ("SEX".equalsIgnoreCase(filter)) {
+                        key = String.valueOf(user.getSex());
+                    }
                     int kneeCount = kneelInfoTrend.get(key).getKneelCounts().get(i) + kneelInfo.getKneelCount();
                     kneelInfoTrend.get(key).getKneelCounts().set(i, kneeCount);
                 }
@@ -233,11 +236,11 @@ public class KneelInfoServiceImpl implements KneelInfoService {
         userKneelQuery.setProvince(province);
         Map<Integer, User> userMap = getUserMap(userKneelQuery);
 
-        userMap = userService.filterBindWxUser(userMap);
-
         if (userMap == null || userMap.isEmpty()) {
             return userKneelInfoList;
         }
+        userMap = userService.filterBindWxUser(userMap);
+
         userKneelQuery.setUserIdList(Lists.newArrayList(userMap.keySet()));
         userKneelQuery.setStart(-1);
         userKneelQuery.setLimit(-1);
@@ -261,9 +264,6 @@ public class KneelInfoServiceImpl implements KneelInfoService {
             userKneelInfoList.add(userKneelInfo);
         }
 
-        if (userKneelInfoList.size() > 7) {
-            return userKneelInfoList.subList(0, 7);
-        }
         return userKneelInfoList;
     }
 
@@ -279,7 +279,7 @@ public class KneelInfoServiceImpl implements KneelInfoService {
     public UserKneelInfo getUserKneelInfo(User user, String province, Date beginTime, Date endTime) {
         List<UserKneelInfo> userKneelInfoList = getKneelInfoRanking(province, beginTime, endTime);
         final int userId = user.getId();
-        UserKneelInfo userKneelInfo = new UserKneelInfo(user.getId(), user.getNickName(), user.getHeadimgUrl(), 0, userKneelInfoList.size() + 1, beginTime, endTime);
+        UserKneelInfo userKneelInfo = new UserKneelInfo(user.getId(), user.getNickName(), user.getHeadimgUrl(), 0, 0, beginTime, endTime);
         for (UserKneelInfo otherUserKneelInfo : userKneelInfoList) {
             if (otherUserKneelInfo.getUserId() == userId) {
                 userKneelInfo = otherUserKneelInfo;

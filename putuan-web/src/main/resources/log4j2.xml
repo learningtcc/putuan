@@ -5,15 +5,16 @@
             <PatternLayout pattern="%d %p [%c] - %m%n" />
         </Console>
 
-        <RollingFile name="all-log" fileName="${loggingRoot}/putuan-all.log" filePattern="${loggingRoot}/putuan-all_%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="all-log" fileName="${loggingRoot}/putuan-all.log" filePattern="${loggingRoot}/putuan-all_%d{yyyy-MM-dd}_%i.log.gz">
             <!--<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />-->
             <PatternLayout pattern="%d %p [%c] - %m%n" />
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
             </Policies>
             <DefaultRolloverStrategy max="7"/>
         </RollingFile>
-        <RollingFile name="debug-log" fileName="${loggingRoot}/putuan-debug.log" filePattern="${loggingRoot}/putuan-debug_%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="debug-log" fileName="${loggingRoot}/putuan-debug.log" filePattern="${loggingRoot}/putuan-debug_%d{yyyy-MM-dd}_%i.log.gz">
             <!--过滤掉info以上的日志-->
             <Filters>
                 <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
@@ -22,25 +23,28 @@
 
             <PatternLayout pattern="%d %p [%c] - %m%n" />
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
             </Policies>
             <DefaultRolloverStrategy max="7"/>
         </RollingFile>
 
-        <RollingFile name="error-log" fileName="${loggingRoot}/putuan-error.log" filePattern="${loggingRoot}/putuan-error_%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="error-log" fileName="${loggingRoot}/putuan-error.log" filePattern="${loggingRoot}/putuan-error_%d{yyyy-MM-dd}_%i.log.gz">
             <Filters>
                 <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <PatternLayout pattern="%d %p [%c] - %m%n" />
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1024 MB" />
             </Policies>
             <DefaultRolloverStrategy max="7"/>
         </RollingFile>
-        <RollingFile name="sql-log" fileName="${loggingRoot}/putuan-sql-debug.log" filePattern="${loggingRoot}/putuan-sql-debug.log-%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="sql-log" fileName="${loggingRoot}/putuan-sql-debug.log" filePattern="${loggingRoot}/putuan-sql-debug.log-%d{yyyy-MM-dd}_%i.log.gz">
             <PatternLayout pattern="%d %p [%c] - %m%n" />
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="500 MB" />
             </Policies>
             <DefaultRolloverStrategy max="7"/>
         </RollingFile>

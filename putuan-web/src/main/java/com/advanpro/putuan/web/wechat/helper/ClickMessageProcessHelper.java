@@ -53,10 +53,20 @@ public class ClickMessageProcessHelper {
             Date endTime = DateUtils.getDateStart(DateUtils.addDays(DateUtils.getCurrentDate(), 1));
             UserKneelInfo allUserKneelInfo = kneelInfoService.getUserKneelInfo(user, "全国", beginTime, endTime);
             UserKneelInfo userKneelInfo = kneelInfoService.getUserKneelInfo(user, user.getProvince(), beginTime, endTime);
+            String allRanking = "无排名";
+            String userRanking = "无排名";
+            if (allUserKneelInfo.getRanking() > 0) {
+                allRanking = String.valueOf(allUserKneelInfo.getRanking());
+            }
+
+            if (userKneelInfo.getRanking() > 0) {
+                userRanking = String.valueOf(userKneelInfo.getRanking());
+            }
+
             item.setTitle("跪拜排行");
             item.setDescription("跪拜数:                                " + allUserKneelInfo.getKneelCount()
-                    + "\n\n全国排名:                            " + allUserKneelInfo.getRanking() + "\n\n"
-                    + user.getProvince() + "省排名 :                       " + userKneelInfo.getRanking());
+                    + "\n\n全国排名:                            " + allRanking + "\n\n"
+                    + user.getProvince() + "省排名 :                       " + userRanking);
             item.Url = url + "?appid=" + appId + "&redirect_uri=" + redirectUrl + "&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
             return MessageHandlerUtil.buildNewsMessage(map, item);
         }

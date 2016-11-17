@@ -13,7 +13,11 @@ public class DeviceVo {
 
     private String deviceId;
 
+    private String deviceNumber;
+
     private String mac;
+
+    private String typeCode;
 
     private String deviceType;
 
@@ -41,10 +45,28 @@ public class DeviceVo {
         this.deviceType = deviceType;
     }
 
+    public String getDeviceNumber() {
+        return deviceNumber;
+    }
+
+    public void setDeviceNumber(String deviceNumber) {
+        this.deviceNumber = deviceNumber;
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
+
     public void populateDevice(Device device) {
         if (device != null) {
             this.setDeviceId(device.getDeviceId());
+            this.setDeviceNumber(device.getDeviceNumber());
             this.setMac(device.getMac());
+            this.setTypeCode(device.getTypeCode());
             String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
             this.setDeviceType(deviceType);
         }

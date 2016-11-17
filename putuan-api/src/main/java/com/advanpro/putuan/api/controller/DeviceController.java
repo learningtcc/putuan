@@ -51,7 +51,9 @@ public class DeviceController extends BaseController {
             if (userDeviceList != null && !userDeviceList.isEmpty()) {
                 for (UserDevice userDevice : userDeviceList) {
                     DeviceVo deviceVo = new DeviceVo();
-                    deviceVo.populateDevice(deviceService.queryByDeviceId(userDevice.getDeviceId()));
+                    Device device = deviceService.queryByDeviceId(userDevice.getDeviceId());
+                    device.setCreateTime(userDevice.getCreateTime());
+                    deviceVo.populateDevice(device);
                     deviceVoList.add(deviceVo);
                 }
             }
