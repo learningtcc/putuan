@@ -1,14 +1,18 @@
 package com.advanpro.putuan.web.wechat;
 
+import com.advanpro.putuan.model.User;
 import com.advanpro.putuan.service.AccessTokenService;
+import com.advanpro.putuan.utils.json.JsonResult;
 import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
 import com.advanpro.putuan.web.common.BaseController;
+import com.advanpro.putuan.web.form.UserVo;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;

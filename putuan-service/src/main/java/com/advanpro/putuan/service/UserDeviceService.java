@@ -24,4 +24,10 @@ public interface UserDeviceService {
     void bindDeviceWX(String openId, String deviceId);
 
     void unBindDeviceWX(String openId, String deviceId);
+
+    UserDevice queryByDeviceId(String deviceId);
+
+    List<UserDevice> queryUsing(int userId, String deviceId);
+
+    List<UserDevice> queryUsingByDeviceId(String deviceId);
 }

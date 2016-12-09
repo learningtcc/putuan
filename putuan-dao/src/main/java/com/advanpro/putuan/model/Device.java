@@ -161,7 +161,7 @@ public class Device extends BaseModel {
         this.setConnectProtocol("3");
         this.setAuthKey("");
         this.setCloseStrategy("1");
-        this.setConnStrategy("4");
+        this.setConnStrategy("5");
         this.setCryptMethod("0");
         this.setAuthVer("0");
         this.setManuMacPos("-1");

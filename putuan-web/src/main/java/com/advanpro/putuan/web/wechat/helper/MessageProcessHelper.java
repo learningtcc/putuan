@@ -1,27 +1,25 @@
 package com.advanpro.putuan.web.wechat.helper;
 
-import com.advanpro.putuan.model.BaseKneelInfo;
 import com.advanpro.putuan.model.Device;
 import com.advanpro.putuan.model.User;
+import com.advanpro.putuan.model.UserDevice;
 import com.advanpro.putuan.model.type.DeviceType;
 import com.advanpro.putuan.service.*;
-import com.advanpro.putuan.task.AccessTokenScheduled;
 import com.advanpro.putuan.utils.consts.MessageHandlerUtil;
-import com.advanpro.putuan.utils.date.DateUtils;
 import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
+import com.google.common.collect.Lists;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.advanpro.putuan.model.type.DeviceType.KD;
-import static com.advanpro.putuan.model.type.DeviceType.PT;
-import static com.advanpro.putuan.model.type.DeviceType.ST;
 
 /**
  * 作者： Joinly
@@ -29,8 +27,7 @@ import static com.advanpro.putuan.model.type.DeviceType.ST;
  * 描述： ${todo}.
  */
 public class MessageProcessHelper {
-
-    private static Logger logger = LoggerFactory.getLogger(AccessTokenScheduled.class);
+    private static Log logger = LogFactory.getLog(MessageProcessHelper.class);
 
     @Autowired
     private AccessTokenService accessTokenService;
@@ -105,26 +102,72 @@ public class MessageProcessHelper {
     public String processUnBind(Map<String, String> map) {
         String deviceId = map.get("DeviceID");
         String openId = map.get("OpenID");
-        String typeCode = deviceService.queryByDeviceId(deviceId).getTypeCode();
-        String deviceType = DeviceType.valueOf(typeCode).desc();
-        String content = deviceType + "解绑成功!";
+        Device device = deviceService.queryByDeviceId(deviceId);
+        String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
+        String content = deviceType + "解绑成功! 设备编号: " + device.getDeviceNumber();
         userDeviceService.unBindDeviceWX(openId, deviceId);
-        return MessageHandlerUtil.handleEventMessage(map, content);
+        String accessToken = accessTokenService.getAccessToken();
+        String url = mpProperty.getMpMessageCustomSendUrl() + "?access_token=" + accessToken;
+        String json = "{\"touser\": \"" + openId + "\", \"msgtype\": \"text\", \"text\": {\"content\": \"" + content + "\"}}";
+        Map result = MpApi.postJson(url, json, Map.class);
+        logger.debug("设备解绑,向用户发送信息, " + "result: " + result.toString() + ", content: " + content);
+        return "";
     }
 
+    /**
+     * 绑定设备
+     *
+     * @param map
+     * @return
+     */
     public String processBind(Map<String, String> map) {
         String deviceId = map.get("DeviceID");
         String openId = map.get("OpenID");
-        String typeCode = deviceService.queryByDeviceId(deviceId).getTypeCode();
-        String deviceType = DeviceType.valueOf(typeCode).desc();
-        String content = deviceType + "绑定成功!";
+        Device device = deviceService.queryByDeviceId(deviceId);
+        String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
         User user = userService.getUserByOpenId(openId);
-        if (StringUtils.isEmpty(user.getPhone())) {
-            content = "请先绑定手机!";
-        } else {
-            userDeviceService.bindDeviceWX(openId, deviceId);
+        String content = deviceType + "绑定成功! 设备编号: " + device.getDeviceNumber();
+        boolean isBinded = true;
+
+        List<UserDevice> userDeviceList = Lists.newArrayList();
+        userDeviceList.addAll(userDeviceService.getDevice(user.getId()));
+        userDeviceList.addAll(userDeviceService.getDevice(user.getUserId()));
+        for (UserDevice userDevice : userDeviceList) {
+            Device otherDevice = deviceService.queryByDeviceId(userDevice.getDeviceId());
+            if (device.getTypeCode().equalsIgnoreCase(otherDevice.getTypeCode())) {
+                content = "微信或APP同一类型的设备只能绑定一个! ";
+                isBinded = false;
+            }
         }
-        return MessageHandlerUtil.handleEventMessage(map, content);
+
+        if (isBinded) {
+            List<UserDevice> otherUserDeviceList = userDeviceService.queryUsingByDeviceId(deviceId);
+            if (otherUserDeviceList != null && !otherUserDeviceList.isEmpty()) {
+                for (UserDevice userDevice : otherUserDeviceList) {
+                    User otherUser = userService.get(userDevice.getUserId());
+                    if ("WX".equalsIgnoreCase(otherUser.getUserType()) && StringUtils.isNotEmpty(otherUser.getOpenId())) {
+                        userDeviceService.unBindDeviceWX(otherUser.getOpenId(), deviceId);
+                    } else {
+                        userDeviceService.unBindDevice(otherUser.getId(), deviceId);
+                    }
+                }
+            }
+
+            if (user != null && StringUtils.isEmpty(user.getPhone())) {
+                content += " 请尽快绑定手机!";
+            }
+            userDeviceService.bindDeviceWX(openId, deviceId);
+        } else {
+            //不符合绑定逻辑的需要手动解绑
+            deviceService.compelUnBind(openId, deviceId);
+        }
+
+        String accessToken = accessTokenService.getAccessToken();
+        String url = mpProperty.getMpMessageCustomSendUrl() + "?access_token=" + accessToken;
+        String json = "{\"touser\": \"" + openId + "\", \"msgtype\": \"text\", \"text\": {\"content\": \"" + content + "\"}}";
+        Map result = MpApi.postJson(url, json, Map.class);
+        logger.debug("设备绑定, 向用户发送信息, " + "result: " + result.toString() + ", content: " + content);
+        return "";
     }
 
     /**
@@ -136,16 +179,23 @@ public class MessageProcessHelper {
     public String processDeviceMessage(Map<String, String> map) {
         String openId = map.get("OpenID");
         String deviceId = map.get("DeviceID");
-        byte[] content = Base64.decodeBase64(map.get("content"));
+        String contentStr = map.get("Content");
+        byte[] content = Base64.decodeBase64(contentStr);
+        logger.debug("接收到设备发送的信息, Content: " + Arrays.toString(content) + ", Device Id:" + deviceId + ", Open Id: " + openId);
+        if (content == null || content.length == 0) {
+            return "";
+        }
         if (content.length == 6) {
-            int kneelCount = ((content[4] & 0x000000FF) << 8) + (content[5] & 0x000000FF);
-            User user = userService.getBindUserByOpenId(openId);
-            kneelInfoService.addOrUpdateWX(user.getId(), deviceId, kneelCount);
+            if (content[0] == 0x0a && content[1] == 0x01) {
+                int kneelCount = ((content[4] & 0xFF)) | ((content[5] & 0xFF) << 8);
+                User user = userService.getBindUserByOpenId(openId);
+                kneelInfoService.addOrUpdateWX(user.getId(), deviceId, kneelCount);
+            }
         }
         if (content.length == 4) {
-            if (content[0] == 0x02 && content[1] == 0x04) {
-                if (content[3] != 0x01) {
-                    logger.error("清除设备数据出错, Debug Code:" + content[4]);
+            if (content[0] == 0x0a && content[1] == 0x07) {
+                if (content[2] != 0x01) {
+                    logger.debug("清除设备数据失败, Debug Code:" + content[3]);
                 }
             }
         }

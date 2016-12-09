@@ -21,7 +21,7 @@ public interface VersionService {
 
     Version get(int id);
 
-    Version getNewest(String type);
+    Version getNewest(String type, String deviceType);
 
     List<Version> query();
 }

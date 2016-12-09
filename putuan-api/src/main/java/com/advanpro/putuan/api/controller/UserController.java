@@ -343,6 +343,13 @@ public class UserController extends BaseController {
                 wxUser.setStatus(1);
                 wxUser.setUserType("WX");
             }
+            wxUser.setSex(user.getSex());
+            wxUser.setBirthday(user.getBirthday());
+            wxUser.setAge(user.getAge());
+            wxUser.setCountry(user.getCountry());
+            wxUser.setProvince(user.getProvince());
+            wxUser.setCity(user.getCity());
+            wxUser.setPhone(user.getPhone());
             userService.bindUser(wxUser, user);
             return new JsonResult(StatusCode.OK);
         } catch (Exception e) {

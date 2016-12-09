@@ -61,7 +61,7 @@ public class UploadFile {
      * @return
      * @throws IOException
      */
-    public static File transferTo(MultipartFile multipartFile, String uploadPath, String fileName) throws IOException {
+    public static void transferTo(MultipartFile multipartFile, String uploadPath, String fileName) throws IOException {
         File file = new File(uploadPath + "/" + fileName);
         if (!file.getParentFile().exists()) {
             File folder = new File(uploadPath);
@@ -69,7 +69,19 @@ public class UploadFile {
         }
         //保存到一个目标文件中。
         multipartFile.transferTo(file);
-        return file;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param path 路径
+     * @param path
+     */
+    public static void deleteFile(String path) {
+        File file = new File(path);
+        if (file.isFile() && file.exists()) {
+            file.delete();
+        }
     }
 
 }

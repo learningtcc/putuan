@@ -17,11 +17,15 @@ public interface UserDeviceDao {
 
     void update(UserDevice userDevice);
 
-    void unBindDevice(@Param("userId")  int userId, @Param("deviceId")  String deviceId);
+    void unBindDevice(@Param("userId") int userId, @Param("deviceId") String deviceId);
 
     List<UserDevice> get(int userId);
 
     void clear(String deviceId);
 
     UserDevice queryByDeviceId(String deviceId);
+
+    List<UserDevice> queryUsingByDeviceId(String deviceId);
+
+    List<UserDevice> queryUsing(@Param("userId") int userId, @Param("deviceId") String deviceId);
 }

@@ -93,6 +93,13 @@ public class UserController extends BaseController {
             if (appUser == null) {
                 userService.bindPhone(wxUser.getId(), phone);
             } else {
+                wxUser.setSex(appUser.getSex());
+                wxUser.setBirthday(appUser.getBirthday());
+                wxUser.setAge(appUser.getAge());
+                wxUser.setCountry(appUser.getCountry());
+                wxUser.setProvince(appUser.getProvince());
+                wxUser.setCity(appUser.getCity());
+                wxUser.setPhone(appUser.getPhone());
                 userService.bindUser(wxUser, appUser);
             }
 

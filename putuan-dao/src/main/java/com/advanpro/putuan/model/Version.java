@@ -17,6 +17,8 @@ public class Version extends BaseModel {
 
     private String type;
 
+    private String deviceType;
+
     private String url;
 
     private String md5;
@@ -59,6 +61,14 @@ public class Version extends BaseModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     public String getUrl() {

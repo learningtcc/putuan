@@ -7,6 +7,8 @@ import com.advanpro.putuan.service.DeviceService;
 import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.json.JsonResult;
 import com.advanpro.putuan.web.common.BaseController;
+import com.advanpro.putuan.web.form.DeviceVo;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ public class DeviceController extends BaseController {
     @RequestMapping("/boss/device/list")
     public JsonResult queryDevice(@RequestParam("keyword") String keyword, @RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize) {
         try {
-            if (StringUtils.isEmpty( accessTokenService.getAccessToken())) {
+            if (StringUtils.isEmpty(accessTokenService.getAccessToken())) {
                 accessTokenService.updateAccessToken();
             }
 

@@ -3,6 +3,7 @@ package com.advanpro.putuan.web.boss;
 import com.advanpro.putuan.web.common.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -14,16 +15,18 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class IndexController extends BaseController {
 
+    @ResponseBody
     @RequestMapping("/")
     public ModelAndView index(ModelAndView mv) {
-        mv.setViewName("redirect:/boss");
+        mv = new ModelAndView("/boss/index");
         return mv;
     }
 
-    @RequestMapping("/boss")
-    public ModelAndView bossIndex() {
-        ModelAndView mv = new ModelAndView("/boss/index");
+
+    @ResponseBody
+    @RequestMapping("/error")
+    public ModelAndView error(ModelAndView mv) {
+        mv = new ModelAndView("/boss/404");
         return mv;
     }
-
 }

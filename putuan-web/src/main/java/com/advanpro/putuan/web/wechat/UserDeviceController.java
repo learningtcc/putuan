@@ -4,6 +4,8 @@ import com.advanpro.putuan.model.Device;
 import com.advanpro.putuan.model.KneelInfo;
 import com.advanpro.putuan.model.User;
 import com.advanpro.putuan.model.UserDevice;
+import com.advanpro.putuan.model.type.DeviceType;
+import com.advanpro.putuan.service.AccessTokenService;
 import com.advanpro.putuan.service.DeviceService;
 import com.advanpro.putuan.service.UserDeviceService;
 import com.advanpro.putuan.service.UserService;
@@ -11,6 +13,8 @@ import com.advanpro.putuan.utils.date.DateUtils;
 import com.advanpro.putuan.utils.json.JsonResult;
 import com.advanpro.putuan.utils.json.JsonUtils;
 import com.advanpro.putuan.utils.json.StatusCode;
+import com.advanpro.putuan.utils.wx.MpApi;
+import com.advanpro.putuan.utils.wx.MpProperty;
 import com.advanpro.putuan.web.common.BaseController;
 import com.advanpro.putuan.web.form.DeviceVo;
 import com.google.common.collect.Lists;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作者： Vance
@@ -40,6 +45,12 @@ public class UserDeviceController extends BaseController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private AccessTokenService accessTokenService;
+
+    @Autowired
+    private MpProperty mpProperty;
 
 
     @ResponseBody
@@ -71,7 +82,16 @@ public class UserDeviceController extends BaseController {
     @RequestMapping(value = "/wx/device/unBind", method = RequestMethod.POST)
     public JsonResult unBindDevice(String openId, String deviceId) {
         try {
+            Device device = deviceService.queryByDeviceId(deviceId);
+            String typeCode = device.getTypeCode();
+            String deviceType = DeviceType.valueOf(typeCode).desc();
+            String content = deviceType + "解绑成功! 设备编号: " + device.getDeviceNumber();
             userDeviceService.unBindDeviceWX(openId, deviceId);
+            String accessToken = accessTokenService.getAccessToken();
+            String url = mpProperty.getMpMessageCustomSendUrl() + "?access_token=" + accessToken;
+            String json = "{\"touser\": \"" + openId + "\", \"msgtype\": \"text\", \"text\": {\"content\": \"" + content + "\"}}";
+            Map result = MpApi.postJson(url, json, Map.class);
+            logger.debug("设备解绑,向用户发送信息, " + "result: " + result.toString() + ", content: " + content);
             return new JsonResult(true);
         } catch (Exception e) {
             logger.error("解绑设备出错：", e);

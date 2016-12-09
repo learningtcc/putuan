@@ -2,10 +2,7 @@ package com.advanpro.putuan.utils.common;
 
 import com.advanpro.putuan.utils.token.TokenProcessor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -47,19 +44,25 @@ public class EncryptUtils {
     /**
      * 生成文件MD5编码
      *
-     * @param file
+     * @param in
      * @return
      * @throws IOException
      */
-    public static String getFileMD5String(File file) throws IOException {
-        FileInputStream in = new FileInputStream(file);
-        FileChannel ch = in.getChannel();
-        MappedByteBuffer byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
-        md5.update(byteBuffer);
-        BigInteger bi = new BigInteger(1, md5.digest());
-        return bi.toString(16);
+    public static String getFileMD5String(InputStream in) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("md5");
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                messageDigest.update(buf, 0, len);
+            }
+            in.close();
+            return new BigInteger(1, messageDigest.digest()).toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
 
     /**
      * 生成SHA1编码
@@ -79,7 +82,7 @@ public class EncryptUtils {
         TokenProcessor tokenProcessor = new TokenProcessor();
         tokenProcessor.setSecretKey("<putuan>");
         try {
-            System.out.println(tokenProcessor.getTokenV("13750024086:0ca1b59e5a014e6abaa401ffcf581cf2"));
+            System.out.println(tokenProcessor.getTokenV("18617186753:ea259a86fdd0477f98f61dcbcbafe57d"));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

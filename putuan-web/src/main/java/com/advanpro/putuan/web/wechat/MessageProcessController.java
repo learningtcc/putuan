@@ -107,7 +107,7 @@ public class MessageProcessController extends BaseController {
                         backMsg = messageProcessHelper.processUnBind(map);
                     }
                 } else {
-                        messageProcessHelper.processDeviceMessage(map);
+                    messageProcessHelper.processDeviceMessage(map);
                 }
             }
 

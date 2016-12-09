@@ -73,12 +73,14 @@ public class DeviceVo {
     }
 
     public void populateDevice(Device device) {
-        this.setDeviceId(device.getDeviceId());
-        this.setDeviceNumber(device.getDeviceNumber());
-        this.setMac(device.getMac());
-        this.setTypeCode(device.getTypeCode());
-        String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
-        this.setDeviceType(deviceType);
-        this.setTime(device.getCreateTime().getTime());
+        if (device != null) {
+            this.setDeviceId(device.getDeviceId());
+            this.setDeviceNumber(device.getDeviceNumber());
+            this.setMac(device.getMac());
+            this.setTypeCode(device.getTypeCode());
+            String deviceType = DeviceType.valueOf(device.getTypeCode()).desc();
+            this.setDeviceType(deviceType);
+            this.setTime(device.getCreateTime().getTime());
+        }
     }
 }

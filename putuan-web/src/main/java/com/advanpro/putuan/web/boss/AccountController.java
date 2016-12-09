@@ -47,6 +47,18 @@ public class AccountController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/boss/account/delete", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult delete(int id) {
+        try {
+            accountService.delete(id);
+            return new JsonResult(true);
+        } catch (Exception e) {
+            logger.error("删除管理员信息出错", e);
+            return new JsonResult(false, "删除管理员信息失败");
+        }
+    }
+
     @RequestMapping(value = "/boss/account/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(Account account) {

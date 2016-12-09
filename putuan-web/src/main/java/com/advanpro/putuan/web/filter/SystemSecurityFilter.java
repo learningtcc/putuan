@@ -1,6 +1,7 @@
 package com.advanpro.putuan.web.filter;
 
 import com.advanpro.putuan.model.Account;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,10 @@ public class SystemSecurityFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 
         String uri = request.getRequestURI();
 
@@ -45,7 +50,13 @@ public class SystemSecurityFilter implements Filter {
             //处理管理后台登陆
             Account account = (Account) request.getSession().getAttribute("LoginUser");
             if (account == null) {
-                response.sendRedirect("/login");
+                String requestType = request.getHeader("x-requested-with");
+                if (!StringUtils.isEmpty(requestType) && requestType.equalsIgnoreCase("XMLHttpRequest")) {
+                    response.setHeader("sessionstatus", "timeout");
+                    response.sendError(401, "session timeout.");
+                } else {
+                    response.sendRedirect("/login");
+                }
                 return;
             }
             filterChain.doFilter(servletRequest, servletResponse);

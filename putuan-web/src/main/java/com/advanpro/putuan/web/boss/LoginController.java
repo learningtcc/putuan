@@ -24,10 +24,16 @@ public class LoginController extends BaseController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping("/login")
-    public ModelAndView login(ModelAndView mv) {
-        mv.setViewName("/boss/login");
-        return mv;
+
+    @RequestMapping("/checklogin")
+    @ResponseBody
+    public JsonResult checkLogin(HttpServletRequest request) {
+        Account account = (Account)request.getSession().getAttribute("LoginUser");
+        if (account == null) {
+            return new JsonResult(false);
+        }else{
+            return new JsonResult(true);
+        }
     }
 
     @RequestMapping("/tologin")

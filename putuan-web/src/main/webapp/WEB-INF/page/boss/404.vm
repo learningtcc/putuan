@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no">
+    <title>登录</title>
+    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/css/app.72bbd3e8fa6046f6af3e4154623af109.css" rel=stylesheet>
+</head>
+<body class="widescreen">
+<div class="account-pages" style="top:0"></div>
+<div class="clearfix"></div>
+<div class="wrapper-page">
+    <div class="ex-page-content text-center">
+        <div class="text-error"><span class="text-primary">4</span>0<span
+                class="text-info">4</span></div>
+        <h2>抱歉,无法找到您需要的页面。</h2><br>
+        <p class="text-muted">该页面不存在或者已经失效。</p>
+        <p class="text-muted">点击下方按钮返回到管理后台的首页。</p><br><a
+            class="btn btn-default waves-effect waves-light" href="/">返回首页</a></div>
+</div>
+</body>
+</html> 

@@ -32,11 +32,13 @@ public class VersionController extends BaseController {
                 return new JsonResult(StatusCode.INVALID_PARAMETER);
             }
             String type = (String) JsonUtils.toMap(param).get("type");
-            Version version = versionService.getNewest(type);
+            String deviceType = (String) JsonUtils.toMap(param).get("deviceType");
+            Version version = versionService.getNewest(type, deviceType);
             if (version == null) {
                 return new JsonResult(StatusCode.OK);
             }
-            return new JsonResult(StatusCode.OK).addData("version", version.getVersion()).addData("url", version.getUrl());
+            return new JsonResult(StatusCode.OK).addData("version", version.getVersion()).addData("url", version.getUrl())
+                    .addData("product", version.getProduct()).addData("company", version.getCompany()).addData("description", version.getDescription()).addData("md5", version.getMd5());
         } catch (Exception e) {
             logger.error("查询最新版本信息出错:", e);
             return new JsonResult(StatusCode.INTERNAL_ERROR);

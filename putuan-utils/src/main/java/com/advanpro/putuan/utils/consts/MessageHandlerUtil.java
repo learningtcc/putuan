@@ -64,11 +64,11 @@ public class MessageHandlerUtil {
         }
 
         if (MsgType.Event.BIND.equals(event)) {
-            responseMessage = buildTextMessage(map, Content);
+            responseMessage = buildBindMessage(map, Content);
         }
 
         if (MsgType.Event.UNBIND.equals(event)) {
-            responseMessage = buildTextMessage(map, Content);
+            responseMessage = buildUnBindMessage(map, Content);
         }
         return responseMessage;
     }
@@ -108,14 +108,14 @@ public class MessageHandlerUtil {
         String toUserName = map.get("ToUserName");
         String itemContent = buildSingleItem(item);
 
-        String content = String.format("<xml>\n" +
-                "<ToUserName><![CDATA[%s]]></ToUserName>\n" +
-                "<FromUserName><![CDATA[%s]]></FromUserName>\n" +
-                "<CreateTime>%s</CreateTime>\n" +
-                "<MsgType><![CDATA[news]]></MsgType>\n" +
-                "<ArticleCount>%s</ArticleCount>\n" +
-                "<Articles>\n" + "%s" +
-                "</Articles>\n" +
+        String content = String.format("<xml>" +
+                "<ToUserName><![CDATA[%s]]></ToUserName>" +
+                "<FromUserName><![CDATA[%s]]></FromUserName>" +
+                "<CreateTime>%s</CreateTime>" +
+                "<MsgType><![CDATA[news]]></MsgType>" +
+                "<ArticleCount>%s</ArticleCount>" +
+                "<Articles>" + "%s" +
+                "</Articles>" +
                 "</xml> ", fromUserName, toUserName, System.currentTimeMillis(), 1, itemContent);
         return content;
     }

@@ -28,18 +28,18 @@ public class AccessTokenScheduled {
     private RedisCacheService cacheService;
 
     /**
-     * 每小时30分执行
+     * 每60分执行
      */
-    @Scheduled(cron = "0 30 * * * ?")
+    @Scheduled(fixedRate = 1000 * 60 * 60)
     public void action() {
-        logger.info("定时任务[获取access_token]开启");
+        logger.debug("定时任务[获取access_token]开启");
 
         if (cacheService.setnx(CacheKey.accessTokenLock(), RedisLock.ACCESS_TOKEN) == RedisLock.Status.FALSE) {
-            logger.info("定时任务[获取access_token]已被其他应用执行，即将退出");
+            logger.debug("定时任务[获取access_token]已被其他应用执行，即将退出");
             return;
         }
         accessTokenService.updateAccessToken();
         cacheService.remove(CacheKey.accessTokenLock());
-        logger.info("定时任务[获取access_token]结束");
+        logger.debug("定时任务[获取access_token]结束");
     }
 }

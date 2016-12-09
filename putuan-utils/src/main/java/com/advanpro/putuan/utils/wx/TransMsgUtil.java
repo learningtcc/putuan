@@ -25,7 +25,7 @@ public class TransMsgUtil {
         byte hour = (byte) DateUtils.getHour(current);
         byte minute = (byte) DateUtils.getMinute(current);
         byte second = (byte) DateUtils.getSecond(current);
-        byte[] contentByte = {0x02, 0x02, year, month, day, hour, minute, second, month, day};
+        byte[] contentByte = {0x0a, 0x01, year, month, day, hour, minute, second};
         String content = Base64.encodeBase64String(contentByte);
         return content;
     }
@@ -36,7 +36,7 @@ public class TransMsgUtil {
      * @return
      */
     public static String buildClearMsg() {
-        byte[] contentByte = {0x02, 0x04, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
+        byte[] contentByte = {0x0a, 0x07, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         String content = Base64.encodeBase64String(contentByte);
         return content;
     }

@@ -5,22 +5,17 @@ import com.advanpro.putuan.model.UserDevice;
 import com.advanpro.putuan.service.AccessTokenService;
 import com.advanpro.putuan.service.UserDeviceService;
 import com.advanpro.putuan.service.UserService;
-import com.advanpro.putuan.utils.cache.CacheKey;
-import com.advanpro.putuan.utils.cache.RedisLock;
-import com.advanpro.putuan.utils.date.DateUtils;
 import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
 import com.advanpro.putuan.utils.wx.TransMsgUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +45,6 @@ public class TransMsgScheduled {
      */
     @Scheduled(fixedRate = 1000 * 60 * 1)
     public void transSyncMsg() {
-        logger.info("定时任务[向设备发送同步消息]开启");
         String content = TransMsgUtil.buildSyncMsg();
         List<User> userList = userService.queryWX();
         final String deviceType = mpProperty.getOriginId();
@@ -60,18 +54,16 @@ public class TransMsgScheduled {
             for (UserDevice userDevice : userDeviceList) {
                 String deviceId = userDevice.getDeviceId();
                 String json = "{\"device_type\": \"" + deviceType + "\", \"device_id\": \"" + deviceId
-                        + "\", \"openid\": \"" + openId + "\", \"content\": \"" + content + "\"}";
+                        + "\", \"open_id\": \"" + openId + "\", \"content\": \"" + content + "\"}";
 
                 String accessToken = accessTokenService.getAccessToken();
                 String url = mpProperty.getMpDeviceTransMsgUrl() + "?access_token=" + accessToken;
-                Map<String, String> result = MpApi.postJson(url, json, Map.class);
-                if (!"0".equals(result.get("errcode"))) {
-                    logger.info("定时任务[向设备发送同步消息]出错: " + result.get("errmsg") + ", Device ID: " + deviceId + ", Open ID: " + openId);
-                }
+                Map result = MpApi.postJson(url, json, Map.class);
+                logger.debug("定时任务[向设备发送同步消息] Content : " + Arrays.toString(Base64.decodeBase64(content)) + ", Result: " + result.toString()
+                        + ", Device ID: " + deviceId + ", Open ID: " + openId);
             }
         }
 
-        logger.info("定时任务[向设备发送同步消息]结束");
     }
 
 }

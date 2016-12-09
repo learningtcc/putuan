@@ -1,7 +1,7 @@
 package com.advanpro.putuan.dao;
 
-import com.advanpro.putuan.model.Account;
 import com.advanpro.putuan.model.Version;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,9 +22,10 @@ public interface VersionDao {
 
     /**
      * 获取最新版本
+     *
      * @param type
      */
-    Version getNewest(String type);
+    Version getNewest(@Param("type") String type, @Param("deviceType") String deviceType);
 
     List<Version> query();
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset=utf-8>
+  <meta name=viewport content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no">
+  <title>个人主页</title>
+  <link href=../res/css/app.css rel=stylesheet>
+  <link href=../res/css/wx.css rel=stylesheet>
+</head>
+
+<body>
+  <section class="topBanner">
+    <div class="chart-top">
+      <div class="chart-title">
+        <h2>12347<span>次</span></h2>
+        <p>本周总跪拜数</p>
+      </div>
+      <div class="dropdown clearfix">
+        <button class="btn btn-default dropdown-toggle" type="button">
+          日
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li role="presentation" v-for="type in dateList">日</li>
+          <li role="presentation" v-for="type in dateList">月</li>
+          <li role="presentation" v-for="type in dateList">年</li>
+        </ul>
+      </div>
+    </div>
+    <div id="chart-container"></div>
+    <div class="chart-data data-table">
+      <div class="row">
+        <div class="cell">
+          <label>总数</label>
+          <h2>120181</h2>
+        </div>
+        <div class="cell">
+          <label>本周</label>
+          <h2>1247</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="cell">
+          <label>设备</label>
+          <h2>1</h2>
+        </div>
+        <div class="cell">
+          <label>天数</label>
+          <h2>365</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="../res/js/jquery.js"></script>
+  <script src="../res/js/highcharts.js"></script>
+  <script>
+  $(function() {
+    $(".dropdown-toggle").bind('click', function() {
+      $(this).next('.dropdown-menu').toggle()
+    })
+
+    $(".dropdown-menu li").bind('click', function(e) {
+      var txt = $(this).text()
+      $(this).parent().prev('.dropdown-toggle').html(txt + ' <span class="caret"></span>')
+    })
+
+    var chart = Highcharts.chart('chart-container', {
+      chart: {
+        type: 'spline',
+        backgroundColor: 'rgba(0,0,0,0)',
+        height: 303
+      },
+      tooltip: {
+        backgroundColor: '#ffffff',
+        style: {
+          "color": "#892315",
+          "fontSize": "14px",
+        },
+        formatter: function() {
+          return '<b>' + this.y + '</b>';
+        }
+      },
+      plotOptions: {
+        series: {
+          shadow: true
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      title: {
+        text: ''
+      },
+      legend: {
+        enabled: false
+      },
+      xAxis: {
+        gridLineColor: 'rgba(0,0,0,0)',
+        labels: {
+          style: {
+            "color": "rgba(255,255,255,.5)",
+            'fontFamily': 'STKaiti',
+            'fontSize': '14px'
+          },
+        },
+        lineColor: 'rgba(0,0,0,0)',
+        tickLength: 0,
+        categories: ['日', '一', '二', '三', '四', '五', '六']
+      },
+      yAxis: {
+        gridLineColor: 'rgba(0,0,0,0)',
+        labels: {
+          enabled: false
+        },
+        title: {
+          enabled: false
+        }
+      },
+      series: [{
+        color: '#ffffff',
+        lineWidth: 3,
+        marker: {
+          enabled: false
+        },
+        states: {
+          hover: {
+            enabled: true
+          }
+        },
+        shadow: true,
+        data: [1500, 1800, 1600, 1900, 2558, 1234, 1557]
+      }]
+    })
+  })
+  </script>
+</body>
+
+</html>

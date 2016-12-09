@@ -11,6 +11,8 @@ import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.util.Map;
  */
 @Service
 public class DeviceServiceImpl implements DeviceService {
+    private static Log logger = LogFactory.getLog(DeviceServiceImpl.class);
 
     @Autowired
     private AccessTokenService accessTokenService;
@@ -76,11 +79,8 @@ public class DeviceServiceImpl implements DeviceService {
         String accessToken = accessTokenService.getAccessToken();
 
         String url = mpProperty.getMpDeviceCompelUnBindUrl() + "?access_token=" + accessToken;
-        Map<String, String> result = MpApi.postJson(url, json, Map.class);
-        String errcode = result.get("errcode");
-        if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-            throw new RuntimeException("system error");
-        }
+        Map result = MpApi.postJson(url, json, Map.class);
+        LogFactory.getLog(this.getClass()).debug("解绑设备, result: " + result.toString() + ", openId: " + openId + ", deviceId: " + deviceId);
     }
 
     @Override
@@ -90,11 +90,8 @@ public class DeviceServiceImpl implements DeviceService {
         String accessToken = accessTokenService.getAccessToken();
 
         String url = mpProperty.getMpDeviceCompelBindUrl() + "?access_token=" + accessToken;
-        Map<String, String> result = MpApi.postJson(url, json, Map.class);
-        String errcode = result.get("errcode");
-        if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-            throw new RuntimeException("system error");
-        }
+        Map result = MpApi.postJson(url, json, Map.class);
+        LogFactory.getLog(this.getClass()).debug("绑定设备, result: " + result.toString() + ", openId: " + openId + ", deviceId: " + deviceId);
     }
 
     @Override
@@ -137,9 +134,6 @@ public class DeviceServiceImpl implements DeviceService {
         String mpDeviceInfoJson = JsonUtils.toJson(mpDeviceInfo);
         String json = "{\"device_num\":\"1\",\"device_list\":[" + mpDeviceInfoJson + "],\"op_type\":\"1\"}";
         Map<String, String> result = MpApi.postJson(mpProperty.getMpDeviceAuthorizeDeviceUrl() + "?access_token=" + accessTokenService.getAccessToken(), json, Map.class);
-        String errcode = result.get("errcode");
-        if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-            throw new RuntimeException("system error");
-        }
+        logger.debug("授权设备信息, result: " + result.toString() + ", info: " + json);
     }
 }

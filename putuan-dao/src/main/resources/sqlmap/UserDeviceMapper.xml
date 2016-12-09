@@ -17,6 +17,16 @@
         LIMIT 1
     </select>
 
+    <select id="queryUsing" resultType="com.advanpro.putuan.model.UserDevice">
+        SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device WHERE device_using = 1 AND user_id = #{userId} AND device_id = #{deviceId}
+    </select>
+
+    <select id="queryUsingByDeviceId" resultType="com.advanpro.putuan.model.UserDevice">
+        SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device
+        WHERE device_using = 1 AND device_id = #{deviceId}
+        ORDER BY update_time DESC
+    </select>
+
 
     <select id="get" resultType="com.advanpro.putuan.model.UserDevice">
         SELECT id, user_id, device_id, device_using, create_time, update_time FROM user_device WHERE user_id = #{userId} AND device_using = 1

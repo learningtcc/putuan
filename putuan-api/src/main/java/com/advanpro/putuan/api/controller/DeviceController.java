@@ -110,7 +110,12 @@ public class DeviceController extends BaseController {
                 return new JsonResult(StatusCode.NO_DATA);
             }
             deviceVo.populateDevice(device);
-            return new JsonResult(StatusCode.OK).addData("device", deviceVo);
+            UserDevice userDevice = userDeviceService.queryByDeviceId(device.getDeviceId());
+            int lastUserId = 0;
+            if (userDevice != null) {
+                lastUserId = userDevice.getUserId();
+            }
+            return new JsonResult(StatusCode.OK).addData("device", deviceVo).addData("lastUserId", lastUserId);
         } catch (Exception e) {
             logger.error("获取设备信息出错：", e);
             return new JsonResult(StatusCode.INTERNAL_ERROR);
@@ -135,7 +140,10 @@ public class DeviceController extends BaseController {
             User user = getCurrentUser(request);
             if (user == null || user.getId() != userId)
                 return new JsonResult(StatusCode.NOT_ALLOW);
-
+            Device device = deviceService.queryByDeviceId(deviceId);
+            if (device == null) {
+                return new JsonResult(StatusCode.NO_DATA);
+            }
 
             userDeviceService.bindDevice(userId, deviceId);
             return new JsonResult(StatusCode.OK);
@@ -190,7 +198,7 @@ public class DeviceController extends BaseController {
             if (user == null || user.getId() != userId)
                 return new JsonResult(StatusCode.NOT_ALLOW);
 
-            List<UserDevice> userDeviceList = userDeviceService.query(userId, deviceId);
+            List<UserDevice> userDeviceList = userDeviceService.queryUsing(userId, deviceId);
             if (userDeviceList != null && !userDeviceList.isEmpty()) {
                 return new JsonResult(StatusCode.DEVICE_BIND);
             }

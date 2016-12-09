@@ -2,8 +2,11 @@ package com.advanpro.putuan.web.wechat;
 
 import com.advanpro.putuan.model.KneelInfo;
 import com.advanpro.putuan.model.User;
+import com.advanpro.putuan.model.UserDevice;
 import com.advanpro.putuan.model.UserKneelInfo;
+import com.advanpro.putuan.service.AccessTokenService;
 import com.advanpro.putuan.service.KneelInfoService;
+import com.advanpro.putuan.service.UserDeviceService;
 import com.advanpro.putuan.service.UserService;
 import com.advanpro.putuan.utils.date.DateUtils;
 import com.advanpro.putuan.utils.json.JsonResult;
@@ -11,6 +14,7 @@ import com.advanpro.putuan.utils.json.JsonUtils;
 import com.advanpro.putuan.utils.json.StatusCode;
 import com.advanpro.putuan.utils.wx.MpApi;
 import com.advanpro.putuan.utils.wx.MpProperty;
+import com.advanpro.putuan.utils.wx.TransMsgUtil;
 import com.advanpro.putuan.web.common.BaseController;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +41,12 @@ public class UserKneelInfoController extends BaseController {
 
     @Autowired
     private KneelInfoService kneelInfoService;
+
+    @Autowired
+    private UserDeviceService userDeviceService;
+
+    @Autowired
+    private AccessTokenService accessTokenService;
 
     @Autowired
     private MpProperty mpProperty;
@@ -127,5 +137,31 @@ public class UserKneelInfoController extends BaseController {
             return new JsonResult(false, "检测录入历史数据出错");
         }
     }
+
+    @ResponseBody
+    @RequestMapping("/wx/sync")
+    public JsonResult sendSyncMsg(String openId) {
+        try {
+            String content = TransMsgUtil.buildSyncMsg();
+            final String deviceType = mpProperty.getOriginId();
+            User user = userService.getUserByOpenId(openId);
+            List<UserDevice> userDeviceList = userDeviceService.getDevice(user.getId());
+            for (UserDevice userDevice : userDeviceList) {
+                String deviceId = userDevice.getDeviceId();
+                String json = "{\"device_type\": \"" + deviceType + "\", \"device_id\": \"" + deviceId
+                        + "\", \"open_id\": \"" + openId + "\", \"content\": \"" + content + "\"}";
+
+                String accessToken = accessTokenService.getAccessToken();
+                String url = mpProperty.getMpDeviceTransMsgUrl() + "?access_token=" + accessToken;
+                Map result = MpApi.postJson(url, json, Map.class);
+                logger.debug("向设备发送同步消息, result: " + result.toString() + ", Device ID: " + deviceId + ", Open ID: " + openId);
+            }
+            return new JsonResult(true);
+        } catch (Exception e) {
+            logger.error("发送同步数据出错:", e);
+            return new JsonResult(false, "发送同步数据出错");
+        }
+    }
+
 
 }

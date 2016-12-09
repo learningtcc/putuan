@@ -85,7 +85,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateById(User user) {
+        if (user.getUserId() > 0) {
+            User wxUser = userDao.get(user.getUserId());
+            wxUser.setSex(user.getSex());
+            wxUser.setBirthday(user.getBirthday());
+            wxUser.setAge(user.getAge());
+            wxUser.setCountry(user.getCountry());
+            wxUser.setProvince(user.getProvince());
+            wxUser.setCity(user.getCity());
+            wxUser.setPhone(user.getPhone());
+            userDao.updateById(wxUser);
+        }
         userDao.updateById(user);
     }
 

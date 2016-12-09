@@ -38,18 +38,18 @@
         <servlet-name>mvc-dispatcher</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-    <filter>
-        <filter-name>security</filter-name>
-        <filter-class>com.advanpro.putuan.web.filter.SystemSecurityFilter</filter-class>
-        <init-param>
-            <param-name>passPaths</param-name>
-            <param-value>/login, /doLogin, /tologin, /logout, /res, /static, /wx, /favicon</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>security</filter-name>
-        <url-pattern>/boss/*</url-pattern>
-    </filter-mapping>
+    <!--    <filter>
+            <filter-name>security</filter-name>
+            <filter-class>com.advanpro.putuan.web.filter.SystemSecurityFilter</filter-class>
+            <init-param>
+                <param-name>passPaths</param-name>
+                <param-value>/login, /doLogin, /tologin, /logout, /res, /static, /wx, /favicon</param-value>
+            </init-param>
+        </filter>
+        <filter-mapping>
+            <filter-name>security</filter-name>
+            <url-pattern>/boss/*</url-pattern>
+        </filter-mapping>-->
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -66,5 +66,8 @@
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error</location>
+    </error-page>
 </web-app>

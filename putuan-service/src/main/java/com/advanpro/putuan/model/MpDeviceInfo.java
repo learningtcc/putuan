@@ -26,7 +26,7 @@ public class MpDeviceInfo {
 
     public MpDeviceInfo(Device device) {
         this.id = device.getDeviceId();
-        this.mac = device.getMac();
+        this.mac = device.getMac().replace(":","");
         this.connect_protocol = device.getConnectProtocol();
         this.auth_key = device.getAuthKey();
         this.close_strategy = device.getCloseStrategy();

@@ -82,11 +82,11 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     @Transactional
     public void bindDeviceWX(String openId, String deviceId) {
         User user = userDao.getUserByOpenId(openId);
-
         deviceService.compelBind(openId, deviceId);
+
         //如果最近使用账号不是本账号，则清理设备数据
         UserDevice preUserDevice = userDeviceDao.queryByDeviceId(deviceId);
-        if (user.getId() != preUserDevice.getUserId()) {
+        if (preUserDevice != null && user.getId() != preUserDevice.getUserId()) {
             String content = TransMsgUtil.buildClearMsg();
             String json = "{\"device_type\": \"" + mpProperty.getOriginId() + "\", \"device_id\": \"" + deviceId
                     + "\", \"openid\": \"" + openId + "\", \"content\": \"" + content + "\"}";
@@ -107,4 +107,18 @@ public class UserDeviceServiceImpl implements UserDeviceService {
         userDeviceDao.unBindDevice(user.getId(), deviceId);
     }
 
+    @Override
+    public UserDevice queryByDeviceId(String deviceId) {
+        return userDeviceDao.queryByDeviceId(deviceId);
+    }
+
+    @Override
+    public List<UserDevice> queryUsing(int userId, String deviceId) {
+        return userDeviceDao.queryUsing(userId, deviceId);
+    }
+
+    @Override
+    public List<UserDevice> queryUsingByDeviceId(String deviceId) {
+        return userDeviceDao.queryUsingByDeviceId(deviceId);
+    }
 }
