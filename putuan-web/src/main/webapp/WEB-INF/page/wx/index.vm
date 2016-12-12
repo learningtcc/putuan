@@ -8,14 +8,14 @@
     <script>
         OPENID = '${openId}';
     </script>
-    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/css/app.f28c853a10b78718bc283e7aaf92d774.css" rel="stylesheet">
+    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/css/app.9a777cdb70d537a0d69d2468851b323a.css" rel="stylesheet">
 </head>
-
+ 
 <body>
 <div id="app"></div>
-<script type="text/javascript" src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/js/manifest.6c01e4246b916066770c.js"></script>
+<script type="text/javascript" src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/js/manifest.d925c96841546ee0f476.js"></script>
 <script type="text/javascript" src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/js/vendor.6181697c475798e07ccc.js"></script>
-<script type="text/javascript" src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/js/app.323ee1bbc8fab5b2b113.js"></script>
+<script type="text/javascript" src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/js/app.a50b00e4ca6d34c482fc.js"></script>
 </body>
 
 </html>

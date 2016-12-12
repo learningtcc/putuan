@@ -16,8 +16,6 @@ public class CacheKey {
 
     public static final String PREFIX_NORMAL_USER_TOKEN = "NORMAL_USER_TOKEN";
 
-    public static final String PREFIX_NORMAL_ACCOUNT_TOKEN = "NORMAL_ACCOUNT_TOKEN";
-
     public static String accessToken() {
         return PREFIX_NORMAL_WX + "accessToken";
     }
