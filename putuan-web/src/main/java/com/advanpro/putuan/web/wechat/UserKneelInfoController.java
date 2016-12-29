@@ -17,6 +17,7 @@ import com.advanpro.putuan.utils.wx.MpProperty;
 import com.advanpro.putuan.utils.wx.TransMsgUtil;
 import com.advanpro.putuan.web.common.BaseController;
 import com.google.common.collect.Maps;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +156,7 @@ public class UserKneelInfoController extends BaseController {
                 String accessToken = accessTokenService.getAccessToken();
                 String url = mpProperty.getMpDeviceTransMsgUrl() + "?access_token=" + accessToken;
                 Map result = MpApi.postJson(url, json, Map.class);
-                logger.debug("向设备发送同步消息, result: " + result.toString() + ", Device ID: " + deviceId + ", Open ID: " + openId);
+                logger.debug("向设备发送同步消息 Content : " + Arrays.toString(Base64.decodeBase64(content)) + ", Result: " + result.toString() + ", Device ID: " + deviceId + ", Open ID: " + openId);
             }
             return new JsonResult(true);
         } catch (Exception e) {

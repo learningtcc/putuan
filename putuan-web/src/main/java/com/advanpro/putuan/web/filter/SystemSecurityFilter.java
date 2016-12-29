@@ -43,25 +43,25 @@ public class SystemSecurityFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        if (letGo(uri)) {
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        } else {
-            //处理管理后台登陆
-            Account account = (Account) request.getSession().getAttribute("LoginUser");
-            if (account == null) {
-                String requestType = request.getHeader("x-requested-with");
-                if (!StringUtils.isEmpty(requestType) && requestType.equalsIgnoreCase("XMLHttpRequest")) {
-                    response.setHeader("sessionstatus", "timeout");
-                    response.sendError(401, "session timeout.");
-                } else {
-                    response.sendRedirect("/login");
-                }
-                return;
-            }
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
+//        if (letGo(uri)) {
+//            filterChain.doFilter(servletRequest, servletResponse);
+//            return;
+//        } else {
+//            //处理管理后台登陆
+//            Account account = (Account) request.getSession().getAttribute("LoginUser");
+//            if (account == null) {
+//                String requestType = request.getHeader("x-requested-with");
+//                if (!StringUtils.isEmpty(requestType) && requestType.equalsIgnoreCase("XMLHttpRequest")) {
+//                    response.setHeader("sessionstatus", "timeout");
+//                    response.sendError(401, "session timeout.");
+//                } else {
+//                    response.sendRedirect("/login");
+//                }
+//                return;
+//            }
+//            filterChain.doFilter(servletRequest, servletResponse);
+//            return;
+//        }
     }
 
     private boolean letGo(String uri) {

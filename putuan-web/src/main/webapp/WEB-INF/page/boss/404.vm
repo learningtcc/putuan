@@ -4,7 +4,7 @@
     <meta charset=utf-8>
     <meta name=viewport content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no">
     <title>登录</title>
-    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/css/app.72bbd3e8fa6046f6af3e4154623af109.css" rel=stylesheet>
+    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/css/app.0e5806465ba9e706f649b70082cca5c8.css" rel=stylesheet>
 </head>
 <body class="widescreen">
 <div class="account-pages" style="top:0"></div>

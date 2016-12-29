@@ -4,13 +4,13 @@
 <head>
     <meta charset=utf-8>
     <title>蒲团管理后台</title>
-    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/css/app.72bbd3e8fa6046f6af3e4154623af109.css" rel=stylesheet>
+    <link href="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/css/app.0e5806465ba9e706f649b70082cca5c8.css" rel=stylesheet>
 </head>
 
 <body class=fixed-left>
 <app id=app></app>
-<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/manifest.b6b45b21ea9a0a021e04.js"></script>
-<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/vendor.c36ed64a02a4e2e3f12b.js"></script>
-<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/app.182232b4e00063287985.js"></script></body>
+<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/manifest.ef0167ac1f2943ed216e.js"></script>
+<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/vendor.ddd8cda9ce11862eeb77.js"></script>
+<script type=text/javascript src="$!{UrlBroker.getUrl('DomainHome').toString()}/res/boss/js/app.43cea6c6d1d1ffe0d66d.js"></script></body>
 
 </html>

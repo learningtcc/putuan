@@ -70,7 +70,7 @@ public class MessageProcessHelper {
             user.setStatus(1);
             userService.update(user);
         }
-        String content = "非常感谢您对安润普的支持与关注。安润普基于柔性传感技术的智能可穿戴产品将会与您携手体验更精彩的智能生活。";
+        String content = "非常感谢您对大白牛文化科技的支持与关注。";
         return MessageHandlerUtil.handleEventMessage(map, content);
     }
 
@@ -156,6 +156,7 @@ public class MessageProcessHelper {
             if (user != null && StringUtils.isEmpty(user.getPhone())) {
                 content += " 请尽快绑定手机!";
             }
+            content += "\n注意: 在使用前请确保蓝牙及网络通畅！(如遇连接问题请退出公众号, 再次进入尝试连接)";
             userDeviceService.bindDeviceWX(openId, deviceId);
         } else {
             //不符合绑定逻辑的需要手动解绑
