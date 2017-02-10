@@ -83,6 +83,7 @@ public class UserKneelInfoController extends BaseController {
     public JsonResult add(@RequestBody KneelInfoVo kneelInfoVo) {
         try {
             KneelInfo kneelInfo = kneelInfoVo.toKneelInfo();
+
             kneelInfoService.addOrUpdate(kneelInfo);
             return new JsonResult(StatusCode.OK);
         } catch (Exception e) {

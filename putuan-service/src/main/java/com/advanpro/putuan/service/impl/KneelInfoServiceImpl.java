@@ -6,6 +6,7 @@ import com.advanpro.putuan.dao.query.UserKneelQuery;
 import com.advanpro.putuan.dao.query.UserQuery;
 import com.advanpro.putuan.model.*;
 import com.advanpro.putuan.service.KneelInfoService;
+import com.advanpro.putuan.utils.cache.RedisCacheService;
 import com.advanpro.putuan.utils.common.Page;
 import com.advanpro.putuan.utils.date.DateUtils;
 import com.google.common.base.Function;
@@ -34,6 +35,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private RedisCacheService cacheService;
+
     @Override
     public void add(KneelInfo KneelInfo) {
         kneelInfoDao.add(KneelInfo);
@@ -61,10 +65,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 统计一段时间内所有用户的跪拜信息
-     *
      * @param beginTime 开始时间
-     * @param endTime   结束时间
-     * @param filter    统计条件 SEX-性别 默认-省份
+     * @param endTime 结束时间
+     * @param filter 统计条件 SEX-性别 默认-省份
      * @return
      */
     @Override
@@ -102,10 +105,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 获取一段时间内所有用户的跪拜趋势
-     *
      * @param beginTime 开始时间
-     * @param endTime   结束时间
-     * @param filter    统计条件 SEX-性别 默认-省份
+     * @param endTime 结束时间
+     * @param filter 统计条件 SEX-性别 默认-省份
      * @return
      */
     @Override
@@ -195,7 +197,6 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 根据条件查询用户跪拜明细
-     *
      * @param userKneelQuery 查询条件
      * @return
      */
@@ -222,10 +223,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 根据省份和时间筛选用户跪拜排行
-     *
-     * @param province  省份
+     * @param province 省份
      * @param beginTime 开始时间
-     * @param endTime   结束时间
+     * @param endTime 结束时间
      * @return
      */
     @Override
@@ -269,11 +269,10 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 获取用户跪拜排名和跪拜数
-     *
-     * @param user      当前用户
+     * @param user 当前用户
      * @param province
      * @param beginTime 开始时间
-     * @param endTime   结束时间   @return
+     * @param endTime 结束时间   @return
      */
     @Override
     public UserKneelInfo getUserKneelInfo(User user, String province, Date beginTime, Date endTime) {
@@ -293,10 +292,12 @@ public class KneelInfoServiceImpl implements KneelInfoService {
     public void addOrUpdate(KneelInfo kneelInfo) {
         Date beginTime = DateUtils.getDateStart(DateUtils.getCurrentDate());
         Date endTime = DateUtils.addDays(beginTime, 1);
+        String key = kneelInfo.getUserId() + kneelInfo.getDeviceId() + DateUtils.getDateStart(kneelInfo.getStartTime());
+
         List<KneelInfo> kneelInfoList = kneelInfoDao.queryByUserIdAndDeviceId(kneelInfo.getUserId(), kneelInfo.getDeviceId(), beginTime, endTime);
-        if (kneelInfoList == null || kneelInfoList.isEmpty()) {
+        if ((kneelInfoList == null || kneelInfoList.isEmpty()) && !isInCache(key)) {
             kneelInfoDao.add(kneelInfo);
-        } else {
+        } else if (kneelInfoList != null && !kneelInfoList.isEmpty()) {
             KneelInfo updateKneelInfo = kneelInfoList.get(0);
             if (kneelInfo.getKneelCount() > updateKneelInfo.getKneelCount()) {
                 updateKneelInfo.setKneelCount(kneelInfo.getKneelCount());
@@ -311,10 +312,12 @@ public class KneelInfoServiceImpl implements KneelInfoService {
     public void addOrUpdateBase(BaseKneelInfo baseKneelInfo) {
         Date beginTime = DateUtils.getDateStart(DateUtils.getCurrentDate());
         Date endTime = DateUtils.addDays(beginTime, 1);
+        String key = "Base" + baseKneelInfo.getUserId() + baseKneelInfo.getDeviceId() + DateUtils.getDateStart(baseKneelInfo.getTime());
+
         List<BaseKneelInfo> baseKneelInfoList = kneelInfoDao.queryBase(baseKneelInfo.getUserId(), baseKneelInfo.getDeviceId(), beginTime, endTime);
-        if (baseKneelInfoList == null || baseKneelInfoList.isEmpty()) {
+        if ((baseKneelInfoList == null || baseKneelInfoList.isEmpty()) && !isInCache(key)) {
             kneelInfoDao.addBase(baseKneelInfo);
-        } else {
+        } else if (baseKneelInfoList != null && !baseKneelInfoList.isEmpty()) {
             BaseKneelInfo updateBaseKneelInfo = baseKneelInfoList.get(0);
             if (baseKneelInfo.getCount() > updateBaseKneelInfo.getCount()) {
                 updateBaseKneelInfo.setCount(baseKneelInfo.getCount());
@@ -349,7 +352,6 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 录入历史数据
-     *
      * @param user
      * @param kneelInfo
      */
@@ -378,10 +380,9 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 根据用户跪拜信息汇总数据
-     *
      * @param kneelInfoList 跪拜信息
-     * @param filter        统计条件 SEX-性别 默认-省份
-     * @param startTime     开始时间
+     * @param filter 统计条件 SEX-性别 默认-省份
+     * @param startTime 开始时间
      * @return
      */
     private Map<String, KneelInfoSummary> getKneelInfoSummary(List<KneelInfo> kneelInfoList, String filter, Date startTime) {
@@ -412,9 +413,8 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 根据跪拜信息列表获取用户Id对应的跪拜信息的集合
-     *
      * @param kneelInfoList 跪拜信息列表
-     * @param userMap       用户Map集合
+     * @param userMap 用户Map集合
      * @return
      */
     private Map<Integer, KneelInfo> getUserIdToKneel(List<KneelInfo> kneelInfoList, Map<Integer, User> userMap) {
@@ -437,7 +437,6 @@ public class KneelInfoServiceImpl implements KneelInfoService {
 
     /**
      * 根据用户跪拜条件获取用户ID的Map集合
-     *
      * @param userKneelQuery 用户跪拜条件
      * @return
      */
@@ -461,5 +460,16 @@ public class KneelInfoServiceImpl implements KneelInfoService {
             }
         });
         return userMap;
+    }
+
+    private boolean isInCache(String key) {
+        synchronized (key) {
+            if (cacheService.get(key) != null) {
+                return true;
+            } else {
+                cacheService.put(key, key, 60);
+            }
+        }
+        return false;
     }
 }
